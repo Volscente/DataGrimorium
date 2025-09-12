@@ -23,21 +23,12 @@ classifiers = [
 [project.urls]
 Documentation = ""
 Repository = "https://github.com/Volscente/DataGrimorium"
-Backlog = "https://github.com/users/Volscente/projects/15"
-Changelog = "https://github.com/Volscente/DruidicGroveAI/blob/main/CHANGELOG.md"
+Backlog = "https://github.com/users/Volscente/projects/16"
+Changelog = "https://github.com/Volscente/DataGrimorium/blob/main/CHANGELOG.md"
 
 [dependency-groups]
 dev = [
-    "colorama>=0.4.6",
-    "jupyterlab>=4.4.3",
-    "matplotlib>=3.10.3",
-    "pre-commit>=4.2.0",
-    "pytest>=8.4.0",
-    "pytest-dotenv>=0.5.2",
-    "ruff>=0.11.13",
-    "scipy>=1.15.3",
-    "seaborn>=0.13.2",
-    "sqlfluff>=3.4.0",
+
 ]
 
 [tool.pytest.ini_options]
