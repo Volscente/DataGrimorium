@@ -21,7 +21,7 @@ classifiers = [
 ]
 
 [project.urls]
-Documentation = ""
+Documentation = "https://github.com/Volscente/DataGrimorium/wiki"
 Repository = "https://github.com/Volscente/DataGrimorium"
 Backlog = "https://github.com/users/Volscente/projects/16"
 Changelog = "https://github.com/Volscente/DataGrimorium/blob/main/CHANGELOG.md"
