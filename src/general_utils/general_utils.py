@@ -15,12 +15,13 @@ logging.basicConfig(
 )
 
 
-def read_file_from_path(file_path: pathlib.Path) -> str:
+def read_file_from_path(file_path: pathlib.Path, root_path: pathlib.Path) -> str:
     """
     Read a file from local path
 
     Args:
         file_path (pathlib.Path): Local file path
+        root_path (pathlib.Path): Local root path
 
     Returns:
         file_read (String): Read file
@@ -28,13 +29,10 @@ def read_file_from_path(file_path: pathlib.Path) -> str:
 
     logger.debug("read_file_from_path - Start")
 
-    # Check if the required environment variable is set
-    if os.getenv("DRUIDIC_GROVE_AI_ROOT_PATH"):
-        # Retrieve the root path
-        root_path = pathlib.Path(os.getenv("DRUIDIC_GROVE_AI_ROOT_PATH"))
-    else:
-        logger.error("read_file_from_path - DRUIDIC_GROVE_AI_ROOT_PATH is not set")
-        raise EnvironmentError("Environment variable 'DRUIDIC_GROVE_AI_ROOT_PATH' is not set")
+    # Check if the root_path exists
+    if not root_path.exists():
+        logger.error("read_file_from_path - Root path does not exist")
+        raise EnvironmentError("The root path does not exist")
 
     logger.debug("read_file_from_path - Root directory: %s", root_path.as_posix())
 
