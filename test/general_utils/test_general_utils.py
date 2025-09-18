@@ -19,7 +19,7 @@ root_path = pathlib.Path(os.getenv("DATA_GRIMORIUM_ROOT_PATH"))
     "input_path, root_path, expected_first_line",
     [
         (
-            pathlib.Path("queries/test_queries/test_read_query.sql"),
+            pathlib.Path("data/test/test_read_query.sql"),
             root_path,
             "/*",
         )
@@ -32,11 +32,15 @@ def test_read_file_from_path(input_path: pathlib.Path, root_path: pathlib.Path, 
 
     Args:
         input_path (pathlib.Path): Local file path
+        root_path (pathlib.Path): Local root path
         expected_first_line (String): File first line
     """
 
     # Read the file
-    file_read = read_file_from_path(input_path)
+    file_read = read_file_from_path(
+        file_path=input_path,
+        root_path=root_path
+    )
 
     assert file_read.partition("\n")[0] == expected_first_line
 
