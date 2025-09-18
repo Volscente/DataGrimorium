@@ -8,7 +8,7 @@ import os
 import logging
 import pathlib
 
-# Setup logger
+# Setup logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -27,21 +27,21 @@ def read_file_from_path(file_path: pathlib.Path, root_path: pathlib.Path) -> str
         file_read (String): Read file
     """
 
-    logger.debug("read_file_from_path - Start")
+    logging.debug("read_file_from_path - Start")
 
     # Check if the root_path exists
     if not root_path.exists():
-        logger.error("read_file_from_path - Root path does not exist")
+        logging.error("read_file_from_path - Root path does not exist")
         raise EnvironmentError("The root path does not exist")
 
-    logger.debug("read_file_from_path - Root directory: %s", root_path.as_posix())
+    logging.debug("read_file_from_path - Root directory: %s", root_path.as_posix())
 
     # Update the file_path with the project root directory
     file_path = root_path / file_path
 
     # Check if the file_path exists
     if file_path.exists():
-        logger.info("read_file_from_path - Reading file from %s", file_path.as_posix())
+        logging.info("read_file_from_path - Reading file from %s", file_path.as_posix())
 
         # Read file
         with open(file_path, "r", encoding="utf-8") as file:
@@ -49,8 +49,8 @@ def read_file_from_path(file_path: pathlib.Path, root_path: pathlib.Path) -> str
     else:
         raise FileNotFoundError(f"Unable to locate file: {file_path.as_posix()}")
 
-    logger.info("read_file_from_path - Successfully file read from %s", file_path.as_posix())
+    logging.info("read_file_from_path - Successfully file read from %s", file_path.as_posix())
 
-    logger.debug("read_file_from_path - End")
+    logging.debug("read_file_from_path - End")
 
     return file_read

@@ -28,7 +28,8 @@ Changelog = "https://github.com/Volscente/DataGrimorium/blob/main/CHANGELOG.md"
 
 [dependency-groups]
 dev = [
-
+    "pytest>=8.4.2",
+    "pytest-dotenv>=0.5.2",
 ]
 
 [tool.pytest.ini_options]

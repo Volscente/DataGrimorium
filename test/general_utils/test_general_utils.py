@@ -16,7 +16,7 @@ root_path = pathlib.Path(os.getenv("DATA_GRIMORIUM_ROOT_PATH"))
 
 
 @pytest.mark.parametrize(
-    "input_path, root_path, expected_first_line",
+    "input_path, root_path_file, expected_first_line",
     [
         (
             pathlib.Path("data/test/test_read_query.sql"),
@@ -25,21 +25,21 @@ root_path = pathlib.Path(os.getenv("DATA_GRIMORIUM_ROOT_PATH"))
         )
     ],
 )
-def test_read_file_from_path(input_path: pathlib.Path, root_path: pathlib.Path, expected_first_line: str) -> bool:
+def test_read_file_from_path(input_path: pathlib.Path, root_path_file: pathlib.Path, expected_first_line: str) -> bool:
     """
     Test the function src/general_utils/general_utils.read_file_from_path
     by reading a local file and compare the first line
 
     Args:
         input_path (pathlib.Path): Local file path
-        root_path (pathlib.Path): Local root path
+        root_path_file (pathlib.Path): Local root path
         expected_first_line (String): File first line
     """
 
     # Read the file
     file_read = read_file_from_path(
         file_path=input_path,
-        root_path=root_path
+        root_path=root_path_file
     )
 
     assert file_read.partition("\n")[0] == expected_first_line
