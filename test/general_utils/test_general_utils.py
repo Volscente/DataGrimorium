@@ -25,7 +25,9 @@ root_path = pathlib.Path(os.getenv("DATA_GRIMORIUM_ROOT_PATH"))
         )
     ],
 )
-def test_read_file_from_path(input_path: pathlib.Path, root_path_file: pathlib.Path, expected_first_line: str) -> bool:
+def test_read_file_from_path(
+    input_path: pathlib.Path, root_path_file: pathlib.Path, expected_first_line: str
+) -> bool:
     """
     Test the function src/general_utils/general_utils.read_file_from_path
     by reading a local file and compare the first line
@@ -37,28 +39,17 @@ def test_read_file_from_path(input_path: pathlib.Path, root_path_file: pathlib.P
     """
 
     # Read the file
-    file_read = read_file_from_path(
-        file_path=input_path,
-        root_path=root_path_file
-    )
+    file_read = read_file_from_path(file_path=input_path, root_path=root_path_file)
 
     assert file_read.partition("\n")[0] == expected_first_line
 
 
 @pytest.mark.parametrize(
     "input_path, root_path_file, expected_exception",
-    [
-        (
-            pathlib.Path("data/test/wrong_read_query.sql"),
-            root_path,
-            FileNotFoundError
-        )
-    ],
+    [(pathlib.Path("data/test/wrong_read_query.sql"), root_path, FileNotFoundError)],
 )
 def test_read_file_from_path_exceptions(
-    input_path: pathlib.Path,
-    root_path_file: pathlib.Path,
-    expected_exception: Exception
+    input_path: pathlib.Path, root_path_file: pathlib.Path, expected_exception: Exception
 ) -> bool:
     """
     Test the exceptions to the function
