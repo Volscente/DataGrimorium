@@ -1,3 +1,5 @@
+![Inspiring Image](https://repository-images.githubusercontent.com/1055704668/6835e004-16c3-4ffe-be59-b51e72a378c2)
+
 # Data Grimorium
 Data Grimorium is a collection of utilities for Data Scientists and Machine Learning 
 Engineers, designed to streamline workflows and accelerate day-to-day coding tasks.
