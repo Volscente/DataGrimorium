@@ -46,16 +46,19 @@ def test_read_file_from_path(input_path: pathlib.Path, root_path_file: pathlib.P
 
 
 @pytest.mark.parametrize(
-    "input_path, expected_exception",
+    "input_path, root_path_file, expected_exception",
     [
         (
-            pathlib.Path(__file__).parents[2] / "queries" / "test_queries" / "wrong_file.sql",
-            FileNotFoundError,
+            pathlib.Path("data/test/wrong_read_query.sql"),
+            root_path,
+            FileNotFoundError
         )
     ],
 )
 def test_read_file_from_path_exceptions(
-    input_path: pathlib.Path, expected_exception: Exception
+    input_path: pathlib.Path,
+    root_path_file: pathlib.Path,
+    expected_exception: Exception
 ) -> bool:
     """
     Test the exceptions to the function
@@ -63,8 +66,9 @@ def test_read_file_from_path_exceptions(
 
     Args:
         input_path (pathlib.Path): Wrong local file path
+        root_path_file (pathlib.Path): Local root path
         expected_exception (Exception): Instance of triggered exception
     """
 
     with pytest.raises(expected_exception):
-        read_file_from_path(input_path)
+        read_file_from_path(input_path, root_path)
