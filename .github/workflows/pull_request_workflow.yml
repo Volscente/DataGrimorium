@@ -7,7 +7,7 @@ on:
       - main
       - dev
 env:
-  DRUIDIC_GROVE_AI_ROOT_PATH: './'
+  DATA_GRIMORIUM_ROOT_PATH: './'
 
 
 jobs:
