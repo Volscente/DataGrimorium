@@ -44,7 +44,7 @@ filterwarnings = [
 ]
 # Set the PYTHONPATH
 pythonpath = [
-  "data_grimorium"
+  "src"
 ]
 # Read from the .env file
 env_files = [".env"]
