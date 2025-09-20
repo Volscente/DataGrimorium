@@ -28,7 +28,10 @@ Changelog = "https://github.com/Volscente/DataGrimorium/blob/main/CHANGELOG.md"
 
 [dependency-groups]
 dev = [
-
+    "pre-commit>=4.3.0",
+    "pytest>=8.4.2",
+    "pytest-dotenv>=0.5.2",
+    "ruff>=0.13.1",
 ]
 
 [tool.pytest.ini_options]
@@ -41,7 +44,7 @@ filterwarnings = [
 ]
 # Set the PYTHONPATH
 pythonpath = [
-  "src"
+  "data_grimorium"
 ]
 # Read from the .env file
 env_files = [".env"]

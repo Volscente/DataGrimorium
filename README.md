@@ -1,24 +1,24 @@
+![Inspiring Image](https://repository-images.githubusercontent.com/1055704668/6835e004-16c3-4ffe-be59-b51e72a378c2)
 
-# $NAME
-$DESCRIPTION
+# Data Grimorium
+Data Grimorium is a collection of utilities for Data Scientists and Machine Learning 
+Engineers, designed to streamline workflows and accelerate day-to-day coding tasks.
 
 # Resources
-The full documentation of the project can be found in the dedicated [GitHub Pages]().
+For the developers, check the wiki [Package & Modules](https://github.com/Volscente/DataGrimorium/wiki/Packages-&-Modules) Section.
 
-For the developers, check the wiki [Package & Modules]() Section.
-
-Please refer to this [Contributing Guidelines]() in order to contribute to the repository.
+Please refer to this [Contributing Guidelines](https://github.com/users/Volscente/projects/16/views/1) in order to contribute to the repository.
 
 # Setup
 ## Environment Variables
-Add the project root directory as `$NAME` environment variable.
+Add the project root directory as `DATA_GRIMORIUM_ROOT_PATH` environment variable.
 ``` bash
-export $NAME="/<absolute_path>/$NAME"
+export DATA_GRIMORIUM_ROOT_PATH="/<absolute_path>/DataGrimorium"
 ```
 Create a `.env` file in the root folder like
 ```
 # Set the Root Path
-$NAME="/<absolute_path>/$NAME"
+DATA_GRIMORIUM_ROOT_PATH="/<absolute_path>/DataGrimorium"
 ```
 
 ## Setup gcloud CLI
