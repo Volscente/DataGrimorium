@@ -1,5 +1,5 @@
 [project]
-name = "datagrimorium"
+name = "data-grimorium"
 version = "0.1.0"
 description = "Data Grimorium is a collection of utilities for Data Scientists and Machine Learning Engineers, designed to streamline workflows and accelerate day-to-day coding tasks."
 authors = [
