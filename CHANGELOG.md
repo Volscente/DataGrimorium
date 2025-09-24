@@ -1,3 +1,9 @@
+# v.0.1.0a
+
+------
+
+- [x] Refactor the structure of the packages and modules under `src`
+
 # v.0.1.0
 
 -------
