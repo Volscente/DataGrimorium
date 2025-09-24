@@ -9,7 +9,7 @@ echo
 # Check
 ruff check --fix
 
-# Format .data_grimorium and .tests folders
+# Format .src and .tests folders
 ruff format
 
 echo

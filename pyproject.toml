@@ -1,6 +1,6 @@
 [project]
-name = "datagrimorium"
-version = "0.1.0"
+name = "data-grimorium"
+version = "0.1.0a"
 description = "Data Grimorium is a collection of utilities for Data Scientists and Machine Learning Engineers, designed to streamline workflows and accelerate day-to-day coding tasks."
 authors = [
   {name = "Simone Porreca", email = "porrecasimone@gmail.com"},
@@ -21,7 +21,6 @@ classifiers = [
 ]
 
 [project.urls]
-Documentation = ""
 Repository = "https://github.com/Volscente/DataGrimorium"
 Backlog = "https://github.com/users/Volscente/projects/16"
 Changelog = "https://github.com/Volscente/DataGrimorium/blob/main/CHANGELOG.md"
@@ -44,7 +43,7 @@ filterwarnings = [
 ]
 # Set the PYTHONPATH
 pythonpath = [
-  "data_grimorium"
+  "src"
 ]
 # Read from the .env file
 env_files = [".env"]
