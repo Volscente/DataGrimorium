@@ -18,6 +18,12 @@ from data_grimorium.bigquery_connector.bigquery_types import (
 )
 from data_grimorium.general_utils.general_utils import read_file_from_path
 
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+
 
 class BigQueryConnector:
     """
@@ -43,12 +49,6 @@ class BigQueryConnector:
             client_config (ClientConfig): Config for instance a BigQuery Client
             root_path (Path): Root path to the project
         """
-        # Setup logging
-        logging.basicConfig(
-            level=logging.INFO,
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        )
-
         # Initialise attributes
         self._client_config = client_config
         self._root_path = root_path
@@ -126,8 +126,6 @@ class BigQueryConnector:
         # Retrieve query path
         query_path = Path(query_config.query_path)
 
-        logging.info(f"execute_query_from_config - Reading query file: {query_path.as_posix()}")
-
         # Read query
         query = read_file_from_path(query_path, self._root_path)
 
@@ -150,19 +148,16 @@ class BigQueryConnector:
 
         # Switch between a read query and a table creation query
         if job.statement_type == "CREATE_TABLE_AS_SELECT":
-            self._logger.info("execute_query_from_config - Created table from query")
-
             # Return table creation status
-            # NOTE: Using the 'job.done()' does not return True unless few time has passed
             result = job.done()
 
-        else:
-            self._logger.info("execute_query_from_config - Converting data to Pandas DataFrame")
+            logging.info("✅ Table created")
 
+        else:
             # Convert data to a Pandas DataFrame
             result = result.to_dataframe()
 
-        self._logger.debug("execute_query_from_config - End")
+            logging.info(f"✅ Retrieved {len(result)} rows")
 
         return result
 
@@ -171,15 +166,13 @@ class BigQueryConnector:
         Check if a table exists in a dataset
 
         Args:
-            table_name (String): Name of the table
-            dataset_name (String): Name of the dataset
+            table_name (str): Name of the table
+            dataset_name (str): Name of the dataset
 
         Returns:
-            exists (Boolean): Flag indicating if the table exists
+            (bool): Flag indicating if the table exists
         """
-        self._logger.info("table_exists - Start")
-
-        self._logger.info("table_exists - Retrieve list of tables for dataset: %s", dataset_name)
+        logging.info(f"🗂️ Retrieve list of tables in dataset: {dataset_name}")
 
         # Retrieve the list of tables
         tables = self._client.list_tables(dataset_name)
@@ -190,13 +183,15 @@ class BigQueryConnector:
         # Check if the table exists
         exists = table_name in table_names
 
-        self._logger.info("table_exists - Table %s exists: %s", table_name, exists)
-
-        self._logger.info("table_exists - End")
+        if exists:
+            logging.info(f"✅ Table {table_name} exists in dataset {dataset_name}")
+        else:
+            logging.info(f"❌ Table {table_name} does not exist in dataset {dataset_name}")
 
         return exists
 
-    def wrap_dictionary_to_query_config(self, query_config_dictionary: dict) -> QueryConfig:
+    @staticmethod
+    def wrap_dictionary_to_query_config(query_config_dictionary: dict) -> QueryConfig:
         """
         Converts a dictionary of Query Configurations into a ``QueryConfig`` object.
 
@@ -206,13 +201,11 @@ class BigQueryConnector:
         Returns:
             (QueryConfig): Object with BigQuery query configurations.
         """
-        self._logger.info("wrap_dictionary_to_query_parameters - Start")
-
         # Check if there are parameters
         if "query_parameters" not in query_config_dictionary.keys():
-            self._logger.info("wrap_dictionary_to_query_parameters - No query parameters")
+            logging.info("⚠️ No query parameters")
         else:
-            self._logger.info("wrap_dictionary_to_query_parameters - Wrapping query parameters")
+            logging.info("✅ Wrapping query parameters")
 
             # Retrieve parameters
             query_parameters = query_config_dictionary["query_parameters"]
