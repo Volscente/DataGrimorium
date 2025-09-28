@@ -4,7 +4,7 @@
 project_id = 'deep-learning-438509'
 
 [pytest.bigquery.read_query_config]
-query_path = 'queries/test_queries/bigquery_connector/test_read_query.sql'
+query_path = 'data/test/test_read_query.sql'
 query_parameters.id.name = 'id'
 query_parameters.id.type = 'INTEGER'
 query_parameters.id.value = 3863
@@ -13,7 +13,7 @@ query_parameters.display_name.type = 'STRING'
 query_parameters.display_name.value = 'Adam Hughes'
 
 [pytest.bigquery.create_table_query_config]
-query_path = 'queries/test_queries/bigquery_connector/test_create_table_query.sql'
+query_path = 'data/test/test_create_table_query.sql'
 query_parameters.id.name = 'id'
 query_parameters.id.type = 'INTEGER'
 query_parameters.id.value = 1
