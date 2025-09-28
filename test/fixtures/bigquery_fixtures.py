@@ -68,7 +68,7 @@ def fixture_bigquery_connector(
 
 
 @pytest.fixture
-def fixture_read_query_config(
+def fixture_bigquery_read_query_config(
     query_config: dict = config["bigquery"]["read_query_config"],
 ) -> BQQueryConfig:
     """
@@ -98,7 +98,7 @@ def fixture_read_query_config(
 
 
 @pytest.fixture
-def fixture_create_table_query_config(
+def fixture_bigquery_create_table_query_config(
     query_config: dict = config["bigquery"]["create_table_query_config"],
 ) -> BQQueryConfig:
     """
