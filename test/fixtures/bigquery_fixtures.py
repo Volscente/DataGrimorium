@@ -10,9 +10,9 @@ from dynaconf import Dynaconf
 
 # Import Package Modules
 from src.data_grimorium.bigquery_connector.bigquery_types import (
-    ClientConfig,
-    QueryParameter,
-    QueryConfig,
+    BQClientConfig,
+    BQQueryParameter,
+    BQQueryConfig,
 )
 from src.data_grimorium.bigquery_connector.bigquery_connector import BigQueryConnector
 
@@ -30,31 +30,31 @@ config = Dynaconf(
 @pytest.fixture
 def fixture_bigquery_client_config(
     project_id: str = config["bigquery"]["client"]["project_id"],
-) -> ClientConfig:
+) -> BQClientConfig:
     """
-    This fixture returns a BigQueryClientConfig object
+    This fixture returns a BigQueryBQClientConfig object
 
     Args:
         project_id (str): GCP project id
 
     Returns:
-        client_config (ClientConfig): BigQuery object
+        client_config (BQClientConfig): BigQuery object
     """
-    # Instance a BigQueryClientConfig object
-    client_config = ClientConfig(project_id=project_id)
+    # Instance a BigQueryBQClientConfig object
+    client_config = BQClientConfig(project_id=project_id)
 
     return client_config
 
 
 @pytest.fixture
 def fixture_bigquery_connector(
-    fixture_bigquery_client_config: ClientConfig,
+    fixture_bigquery_client_config: BQClientConfig,
 ) -> BigQueryConnector:
     """
     This fixture returns a BigQueryConnector object
 
     Args:
-        fixture_bigquery_client_config (BigQueryClientConfig): Configurations of BigQuery client
+        fixture_bigquery_client_config (BigQueryBQClientConfig): Configurations of BigQuery client
 
     Returns:
         bigquery_connector (BigQueryConnector): BigQuery Connector object
@@ -70,15 +70,15 @@ def fixture_bigquery_connector(
 @pytest.fixture
 def fixture_read_query_config(
     query_config: dict = config["bigquery"]["read_query_config"],
-) -> QueryConfig:
+) -> BQQueryConfig:
     """
-    Fixture for a BigQueryQueryConfig read query configobject
+    Fixture for a BigQueryBQQueryConfig read query configobject
 
     Args:
         query_config (Dictionary): Query configurations
 
     Returns:
-        (BigQueryQueryConfig): Query configurations as an object
+        (BigQueryBQQueryConfig): Query configurations as an object
     """
     # Unpack configs
     query_path, query_parameters = (
@@ -86,10 +86,11 @@ def fixture_read_query_config(
         query_config["query_parameters"],
     )
 
-    return QueryConfig(
+    return BQQueryConfig(
         query_path=query_path,
         query_parameters=[
-            QueryParameter(**query_parameters[parameter_key]) for parameter_key in query_parameters
+            BQQueryParameter(**query_parameters[parameter_key])
+            for parameter_key in query_parameters
         ],
         local_path=None,
         table_name=None,
@@ -99,15 +100,15 @@ def fixture_read_query_config(
 @pytest.fixture
 def fixture_create_table_query_config(
     query_config: dict = config["bigquery"]["create_table_query_config"],
-) -> QueryConfig:
+) -> BQQueryConfig:
     """
-    Fixture for a BigQueryQueryConfig that creates a table query config object
+    Fixture for a BigQueryBQQueryConfig that creates a table query config object
 
     Args:
         query_config (Dictionary): Query configurations
 
     Returns:
-        (BigQueryQueryConfig): Query configurations as an object
+        (BigQueryBQQueryConfig): Query configurations as an object
     """
     # Unpack configs
     query_path, query_parameters = (
@@ -115,10 +116,10 @@ def fixture_create_table_query_config(
         query_config["query_parameters"],
     )
 
-    return QueryConfig(
+    return BQQueryConfig(
         query_path=query_path,
         query_parameters=[
-            QueryParameter(**query_parameters[query_parameter])
+            BQQueryParameter(**query_parameters[query_parameter])
             for query_parameter in query_parameters
         ],
         local_path=None,

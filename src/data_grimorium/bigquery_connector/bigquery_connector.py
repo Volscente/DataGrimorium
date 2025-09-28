@@ -12,9 +12,9 @@ from google.cloud import bigquery
 
 # Import Package Modules
 from data_grimorium.bigquery_connector.bigquery_types import (
-    ClientConfig,
-    QueryParameter,
-    QueryConfig,
+    BQClientConfig,
+    BQQueryParameter,
+    BQQueryConfig,
 )
 from data_grimorium.general_utils.general_utils import read_file_from_path
 
@@ -32,21 +32,21 @@ class BigQueryConnector:
 
     Attributes:
         _root_path (pathlib.Path): Root path of the project
-        _client_config (ClientConfig): Configurations for instance a BigQuery Client instance
+        _client_config (BQClientConfig): Configurations for instance a BigQuery Client instance
         _client (bigquery.Client): BigQuery client object
 
     Methods:
         execute_query_from_config: Execute a query from local path and with a certain set of parameter configurations.
         table_exists: Check if a table exists in a dataset
-        wrap_dictionary_to_query_config: Converts a dictionary of Query Configurations into a ``QueryConfig`` object.
+        wrap_dictionary_to_query_config: Converts a dictionary of Query Configurations into a ``BQQueryConfig`` object.
     """
 
-    def __init__(self, client_config: ClientConfig, root_path: Path):
+    def __init__(self, client_config: BQClientConfig, root_path: Path):
         """
         Constructor of the class BigqueryConnector
 
         Args:
-            client_config (ClientConfig): Config for instance a BigQuery Client
+            client_config (BQClientConfig): Config for instance a BigQuery Client
             root_path (Path): Root path to the project
         """
         # Initialise attributes
@@ -69,13 +69,13 @@ class BigQueryConnector:
 
     @staticmethod
     def _build_query_parameters(
-        query_parameters: List[QueryParameter],
+        query_parameters: List[BQQueryParameter],
     ) -> List[Union[bigquery.ArrayQueryParameter, bigquery.ScalarQueryParameter]]:
         """
-        Build BigQuery query parameters from a list of QueryParameter
+        Build BigQuery query parameters from a list of BQQueryParameter
 
         Args:
-            query_parameters (List[QueryParameter]): Query parameters
+            query_parameters (List[BQQueryParameter]): Query parameters
 
         Returns:
             (List[Union[ArrayQueryParameter, ScalarQueryParameter]]):
@@ -105,13 +105,13 @@ class BigQueryConnector:
 
         return bigquery_query_parameters
 
-    def execute_query_from_config(self, query_config: QueryConfig) -> Union[pd.DataFrame, bool]:
+    def execute_query_from_config(self, query_config: BQQueryConfig) -> Union[pd.DataFrame, bool]:
         """
         Execute a query from local path and with a certain set of parameter configurations.
         The query can either read data or create a table on BigQuery.
 
         Args:
-            query_config (QueryConfig): Query configurations (path and parameters)
+            query_config (BQQueryConfig): Query configurations (path and parameters)
 
         Returns:
             result (Union[pd.DataFrame, bool]): The result of the query execution.
@@ -191,15 +191,15 @@ class BigQueryConnector:
         return exists
 
     @staticmethod
-    def wrap_dictionary_to_query_config(query_config_dictionary: dict) -> QueryConfig:
+    def wrap_dictionary_to_query_config(query_config_dictionary: dict) -> BQQueryConfig:
         """
-        Converts a dictionary of Query Configurations into a ``QueryConfig`` object.
+        Converts a dictionary of Query Configurations into a ``BQQueryConfig`` object.
 
         Args:
             query_config_dictionary (dict): The dictionary containing Query Configurations.
 
         Returns:
-            (QueryConfig): Object with BigQuery query configurations.
+            (BQQueryConfig): Object with BigQuery query configurations.
         """
         # Check if there are parameters
         if "query_parameters" not in query_config_dictionary.keys():
@@ -212,10 +212,10 @@ class BigQueryConnector:
 
             # Wrap query parameters
             wrapped_parameters = [
-                QueryParameter(**query_parameters[parameter]) for parameter in query_parameters
+                BQQueryParameter(**query_parameters[parameter]) for parameter in query_parameters
             ]
 
             # Update the dictionary with the wrapped parameters
             query_config_dictionary["query_parameters"] = wrapped_parameters
 
-        return QueryConfig(**query_config_dictionary)
+        return BQQueryConfig(**query_config_dictionary)

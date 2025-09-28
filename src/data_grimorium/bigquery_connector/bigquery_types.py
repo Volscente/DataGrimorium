@@ -16,7 +16,7 @@ class GPCProjects(str, Enum):
     DEEP_LEARNING = "deep-learning-438509"
 
 
-class ClientConfig(BaseModel):
+class BQClientConfig(BaseModel):
     """
     BigQuery Client configuration
 
@@ -30,7 +30,7 @@ class ClientConfig(BaseModel):
     )
 
 
-class QueryParameter(BaseModel):
+class BQQueryParameter(BaseModel):
     """
     BigQuery Query parameter object, including all required fields for defining the parameter
 
@@ -46,19 +46,19 @@ class QueryParameter(BaseModel):
     value: Union[str, int, float, List] = Field(..., description="Parameter value")
 
 
-class QueryConfig(BaseModel):
+class BQQueryConfig(BaseModel):
     """
     BigQuery Query configuration including all elements for executing a query
 
     Attributes:
         query_path (String): Query file path
-        query_parameters (List[QueryParameter]): [Optional] List of BigQuery parameters or a single parameter
+        query_parameters (List[BQQueryParameter]): [Optional] List of BigQuery parameters or a single parameter
         local_path (String): [Optional] Local path where to save the data
         table_name (String): [Optional] Table name
     """
 
     query_path: str = Field(..., description="Query file path")
-    query_parameters: Optional[List[QueryParameter]] = Field(
+    query_parameters: Optional[List[BQQueryParameter]] = Field(
         None, description="List of BigQuery parameters"
     )
     local_path: Optional[str] = Field(None, description="Local path where to save the data")
