@@ -12,9 +12,9 @@ from src.data_grimorium.bigquery_connector.bigquery_connector import BigQueryCon
 from src.data_grimorium.bigquery_connector.bigquery_types import BQQueryConfig
 
 
-@pytest.mark.skip(
-    reason="This test is skipped because GCP credentials are not stored on GitHub Secret"
-)
+# @pytest.mark.skip(
+#     reason="This test is skipped because GCP credentials are not stored on GitHub Secret"
+# )
 def test_set_client(fixture_bigquery_connector: BigQueryConnector) -> bool:
     """
     Test the function
