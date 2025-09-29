@@ -60,7 +60,7 @@ class BigQueryConnector:
         """
         Set the attribute ``_client`` with an instance of the BigQuery Client.
         """
-        self._logger.info(
+        logging.info(
             f"💼 Set the BigQuery client with project id {self._client_config.project_id.value}"
         )
 
