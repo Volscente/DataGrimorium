@@ -17,11 +17,11 @@ from src.data_grimorium.bigquery_connector.bigquery_types import (
 from src.data_grimorium.bigquery_connector.bigquery_connector import BigQueryConnector
 
 # Retrieve the root path
-root_path = os.getenv("DATA_GRIMORIUM_ROOT_PATH")
+root_path = pathlib.Path(os.getenv("DATA_GRIMORIUM_ROOT_PATH"))
 
 # Read the configuration file
 config = Dynaconf(
-    settings_files=[pathlib.Path(root_path) / "configuration" / "datagrimorium_settings.toml"],
+    settings_files=[root_path / "configuration" / "datagrimorium_settings.toml"],
     environments=True,
     env="pytest",
 )
