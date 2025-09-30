@@ -211,9 +211,14 @@ class BigQueryConnector:
             query_parameters = query_config_dictionary["query_parameters"]
 
             # Wrap query parameters
-            wrapped_parameters = [BQQueryParameter(**param) for param in query_parameters]
+            wrapped_parameters = [
+                BQQueryParameter(**param_dict) for param_dict in query_parameters.values()
+            ]
 
             # Update the dictionary with the wrapped parameters
             query_config_dictionary["query_parameters"] = wrapped_parameters
 
-        return BQQueryConfig(**query_config_dictionary)
+        # Wrap into the object
+        query_config = BQQueryConfig(**query_config_dictionary)
+
+        return query_config

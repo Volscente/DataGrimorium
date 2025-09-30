@@ -8,8 +8,8 @@ from google.cloud import bigquery
 import pytest
 
 # Import Package Modules
-from src.data_grimorium.bigquery_connector.bigquery_connector import BigQueryConnector
-from src.data_grimorium.bigquery_connector.bigquery_types import BQQueryConfig
+from data_grimorium.bigquery_connector.bigquery_connector import BigQueryConnector
+from data_grimorium.bigquery_connector.bigquery_types import BQQueryConfig
 
 
 @pytest.mark.skip(
