@@ -3,10 +3,9 @@ The module includes functions for implementing data transformations
 """
 
 # Import Standard Libraries
-import os
 import numpy as np
 import pandas as pd
-import pathlib
+import logging
 from sentence_transformers import SentenceTransformer
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
@@ -14,8 +13,7 @@ from scipy.stats import zscore
 from typing import List
 
 # Import Package Modules
-from src.logging_module.logging_module import get_logger
-from src.data_preparation.data_preparation_types import (
+from data_grimorium.data_preparation.data_preparation_types import (
     EmbeddingsConfig,
     CompressEmbeddingsConfig,
     EncodingTextConfig,
@@ -24,13 +22,10 @@ from src.data_preparation.data_preparation_types import (
     FlagFeatureConfig,
 )
 
-# Setup logger
-logger = get_logger(
-    os.path.basename(__file__).split(".")[0],
-    pathlib.Path(os.getenv("DRUIDIC_GROVE_AI_ROOT_PATH"))
-    / "src"
-    / "logging_module"
-    / "log_configuration.yaml",
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 
 
@@ -40,22 +35,23 @@ def generate_embeddings(texts: List[str], embeddings_config: EmbeddingsConfig) -
     specified in embeddings_config.method.
 
     Args:
-        texts (String): Input text
+        texts (str): Input text
         embeddings_config (EmbeddingsConfig): Object including embedding configurations
 
     Returns:
         sentence_embeddings (numpy.ndarray): Embedded texts (n_samples, embeddings_size)
     """
-    logger.debug("generate_embeddings - Start")
-
     # Retrieve embeddings' method
     method = embeddings_config.method
+
+    # Initialise result
+    sentence_embeddings = None
+
+    logging.info(f"\t🧠 Generate embeddings with method: {method}")
 
     # Switch based on the embeddings' method
     match method:
         case "SentenceTransformer":
-            logger.info("generate_embeddings - SentenceTransformer embedding approach")
-
             # Instance model
             model = SentenceTransformer(embeddings_config.embedding_model_config.model_name)
 
@@ -64,10 +60,8 @@ def generate_embeddings(texts: List[str], embeddings_config: EmbeddingsConfig) -
                 texts, convert_to_numpy=embeddings_config.embedding_model_config.numpy_tensor
             )
         case _:
-            logger.error("generate_embeddings - Unknown embedding method: %s", method)
+            logging.error(f"\t🚨 Unknown embedding method: {method}")
             raise ValueError("Invalid embedding method")
-
-    logger.debug("generate_embeddings - End")
 
     return sentence_embeddings
 
@@ -86,16 +80,17 @@ def compress_embeddings(
     Returns:
         compressed_embeddings (numpy.ndarray): Output embeddings compressed (n_samples, n_components)
     """
-    logger.debug("compress_embeddings - Start")
-
     # Retrieve compress method
     method = compress_embeddings_config.method
+
+    # Initialise result
+    compressed_embeddings = None
+
+    logging.info(f"\t🧠 Compress embeddings with method: {method}")
 
     # Switch based on the compress method
     match method:
         case "PCA":
-            logger.info("compress_embeddings - PCA compress approach")
-
             # Instance model
             model = PCA(n_components=compress_embeddings_config.compress_model_config.n_components)
 
@@ -103,10 +98,8 @@ def compress_embeddings(
             compressed_embeddings = model.fit_transform(input_embeddings)
 
         case _:
-            logger.error("compress_embeddings - Unknown compression method: %s", method)
+            logging.error(f"\t🚨 Unknown compression method: {method}")
             raise ValueError("Invalid compression method")
-
-    logger.debug("compress_embeddings - End")
 
     return compressed_embeddings
 
@@ -125,15 +118,11 @@ def encode_text(
     Returns:
         compressed_embeddings (numpy.ndarray): Output embeddings compressed (n_samples, n_components)
     """
-    logger.debug("encode_text - Start")
-
     # Generate embeddings
     embeddings = generate_embeddings(texts, config.embeddings_config)
 
     # Compress embeddings
     compressed_embeddings = compress_embeddings(embeddings, config.compress_embeddings_config)
-
-    logger.debug("encode_text - End")
 
     return compressed_embeddings
 
@@ -149,10 +138,10 @@ def extract_date_information(data: pd.DataFrame, config: DateExtractionConfig) -
     Returns:
         (pd.DataFrame): Output data with additional columns
     """
-    logger.debug("extract_date_information - Start")
-
     # Retrieve column name
     column_name = config.column_name
+
+    logging.info(f"\t🗓️ Extract date information from column: {column_name}")
 
     # Convert column to datetime
     data[column_name] = pd.to_datetime(data[column_name])
@@ -162,8 +151,6 @@ def extract_date_information(data: pd.DataFrame, config: DateExtractionConfig) -
         data[f"{column_name}_year"] = data[column_name].dt.year
     if config.extract_month:
         data[f"{column_name}_month"] = data[column_name].dt.month
-
-    logger.debug("extract_date_information - End")
 
     return data
 
@@ -179,19 +166,15 @@ def standardise_features(data: pd.DataFrame, config: NumericalFeaturesConfig) ->
     Returns:
         (pd.DataFrame): Output data with additional columns
     """
-    logger.debug("standardise_features - Start")
-
     # Retrieve configurations
     column_name = config.column_name
     standardisation = config.standardisation
 
-    logger.info("standardise_features - Column: %s", column_name)
+    logging.info("standardise_features - Column: %s", column_name)
 
     # Switch based on the standardisation method
     match standardisation:
         case "min_max_scaler":
-            logger.info("standardise_features - MinMaxScaler standardisation approach")
-
             # Instance the MinMaxScaler
             min_max_scaler = MinMaxScaler()
 
@@ -201,12 +184,10 @@ def standardise_features(data: pd.DataFrame, config: NumericalFeaturesConfig) ->
             )
 
         case _:
-            logger.error(
+            logging.error(
                 "standardise_features - Unknown standardisation method: %s", standardisation
             )
             raise ValueError("Invalid standardisation method")
-
-    logger.debug("standardise_features - End")
 
     return data
 
@@ -222,17 +203,17 @@ def drop_outliers(data: pd.DataFrame, config: NumericalFeaturesConfig) -> pd.Dat
     Returns:
         (pd.DataFrame): Output data with additional columns
     """
-    logger.debug("drop_outliers - Start")
+    logging.debug("drop_outliers - Start")
 
     # Retrieve configurations
     column_name = config.column_name
     drop_outliers_method = config.drop_outliers.method
 
-    logger.info("drop_outliers - Column: %s", column_name)
+    logging.info("drop_outliers - Column: %s", column_name)
 
     match drop_outliers_method:
         case "z_score":
-            logger.info("drop_outliers - Z-score Drop Outliers approach")
+            logging.info("drop_outliers - Z-score Drop Outliers approach")
 
             # Compute z-score
             data.loc[:, f"{column_name}_{drop_outliers_method}"] = zscore(data[column_name])
@@ -243,7 +224,7 @@ def drop_outliers(data: pd.DataFrame, config: NumericalFeaturesConfig) -> pd.Dat
             ]
 
         case "iqr":
-            logger.info("drop_outliers - IQR Drop Outliers approach")
+            logging.info("drop_outliers - IQR Drop Outliers approach")
 
             # Compute Q1 and Q3
             q1 = data[column_name].quantile(0.25)
@@ -258,7 +239,7 @@ def drop_outliers(data: pd.DataFrame, config: NumericalFeaturesConfig) -> pd.Dat
             data = data[(data[column_name] >= lower_bound) & (data[column_name] <= upper_bound)]
 
         case _:
-            logger.error("drop_outliers - Unknown drop outliers method: %s", drop_outliers_method)
+            logging.error("drop_outliers - Unknown drop outliers method: %s", drop_outliers_method)
             raise ValueError("Invalid drop outliers method")
 
     return data
@@ -275,26 +256,26 @@ def manage_nan_values(data: pd.DataFrame, config: NumericalFeaturesConfig) -> pd
     Returns:
         (pd.DataFrame): Output data with applied transformation
     """
-    logger.debug("manage_nan_values - Start")
+    logging.debug("manage_nan_values - Start")
 
     # Retrieve configurations
     column_name = config.column_name
     nan_values_method = config.nan_values
 
-    logger.info("manage_nan_values - Column: %s", column_name)
+    logging.info("manage_nan_values - Column: %s", column_name)
 
     match nan_values_method:
         case "drop_nan":
-            logger.info("manage_nan_values - Drop NaN values")
+            logging.info("manage_nan_values - Drop NaN values")
 
             # Drop NaN values
             data = data.dropna(subset=[column_name])
 
         case _:
-            logger.error("manage_nan_values - Unknown nan values method: %s", nan_values_method)
+            logging.error("manage_nan_values - Unknown nan values method: %s", nan_values_method)
             raise ValueError("Invalid nan values method")
 
-    logger.debug("manage_nan_values - End")
+    logging.debug("manage_nan_values - End")
 
     return data
 
@@ -310,7 +291,7 @@ def prepare_numerical_features(data: pd.DataFrame, config: NumericalFeaturesConf
     Returns:
         (pd.DataFrame): Prepared data
     """
-    logger.debug("prepare_numerical_features - Start")
+    logging.debug("prepare_numerical_features - Start")
 
     # Apply drop outliers
     data = drop_outliers(data, config)
@@ -321,7 +302,7 @@ def prepare_numerical_features(data: pd.DataFrame, config: NumericalFeaturesConf
     # Apply standardisation
     data = standardise_features(data, config)
 
-    logger.debug("prepare_numerical_features - End")
+    logging.debug("prepare_numerical_features - End")
 
     return data
 
@@ -337,13 +318,13 @@ def create_flag_feature(data: pd.DataFrame, config: FlagFeatureConfig) -> pd.Dat
     Returns:
         (pd.DataFrame): Prepared data
     """
-    logger.debug("create_flag_feature - Start")
+    logging.debug("create_flag_feature - Start")
 
-    logger.info("create_flag_feature - 🏳️ Column: %s", config.column_name)
+    logging.info("create_flag_feature - 🏳️ Column: %s", config.column_name)
 
     # Create a flag feature where the column has a value
     data.loc[:, config.output_column_name] = data.loc[:, config.column_name].notna()
 
-    logger.debug("create_flag_feature - End")
+    logging.debug("create_flag_feature - End")
 
     return data
