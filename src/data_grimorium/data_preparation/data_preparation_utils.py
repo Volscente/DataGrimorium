@@ -170,7 +170,7 @@ def standardise_features(data: pd.DataFrame, config: NumericalFeaturesConfig) ->
     column_name = config.column_name
     standardisation = config.standardisation
 
-    logging.info("standardise_features - Column: %s", column_name)
+    logging.info(f"\t🛠️ Standardise feature {column_name} with method: {standardisation}")
 
     # Switch based on the standardisation method
     match standardisation:
@@ -184,9 +184,7 @@ def standardise_features(data: pd.DataFrame, config: NumericalFeaturesConfig) ->
             )
 
         case _:
-            logging.error(
-                "standardise_features - Unknown standardisation method: %s", standardisation
-            )
+            logging.error(f"\t🚨 Unknown standardisation method: {standardisation}")
             raise ValueError("Invalid standardisation method")
 
     return data
@@ -203,18 +201,16 @@ def drop_outliers(data: pd.DataFrame, config: NumericalFeaturesConfig) -> pd.Dat
     Returns:
         (pd.DataFrame): Output data with additional columns
     """
-    logging.debug("drop_outliers - Start")
-
     # Retrieve configurations
     column_name = config.column_name
     drop_outliers_method = config.drop_outliers.method
 
-    logging.info("drop_outliers - Column: %s", column_name)
+    logging.info(
+        f"\t🪂️ Drop outliers from feature {column_name} with method: {drop_outliers_method}"
+    )
 
     match drop_outliers_method:
         case "z_score":
-            logging.info("drop_outliers - Z-score Drop Outliers approach")
-
             # Compute z-score
             data.loc[:, f"{column_name}_{drop_outliers_method}"] = zscore(data[column_name])
 
@@ -224,8 +220,6 @@ def drop_outliers(data: pd.DataFrame, config: NumericalFeaturesConfig) -> pd.Dat
             ]
 
         case "iqr":
-            logging.info("drop_outliers - IQR Drop Outliers approach")
-
             # Compute Q1 and Q3
             q1 = data[column_name].quantile(0.25)
             q3 = data[column_name].quantile(0.75)
@@ -239,7 +233,7 @@ def drop_outliers(data: pd.DataFrame, config: NumericalFeaturesConfig) -> pd.Dat
             data = data[(data[column_name] >= lower_bound) & (data[column_name] <= upper_bound)]
 
         case _:
-            logging.error("drop_outliers - Unknown drop outliers method: %s", drop_outliers_method)
+            logging.error(f"\t🚨 Unknown drop outliers method: {drop_outliers_method}")
             raise ValueError("Invalid drop outliers method")
 
     return data
