@@ -250,23 +250,21 @@ def manage_nan_values(data: pd.DataFrame, config: NumericalFeaturesConfig) -> pd
     Returns:
         (pd.DataFrame): Output data with applied transformation
     """
-    logging.debug("manage_nan_values - Start")
-
     # Retrieve configurations
     column_name = config.column_name
     nan_values_method = config.nan_values
 
-    logging.info("manage_nan_values - Column: %s", column_name)
+    logging.info(
+        f"\t🪹 Manage NaN value from feature {column_name} with method: {nan_values_method}"
+    )
 
     match nan_values_method:
         case "drop_nan":
-            logging.info("manage_nan_values - Drop NaN values")
-
             # Drop NaN values
             data = data.dropna(subset=[column_name])
 
         case _:
-            logging.error("manage_nan_values - Unknown nan values method: %s", nan_values_method)
+            logging.error(f"\t🚨 Unknown nan values method: {nan_values_method}")
             raise ValueError("Invalid nan values method")
 
     logging.debug("manage_nan_values - End")
@@ -285,8 +283,6 @@ def prepare_numerical_features(data: pd.DataFrame, config: NumericalFeaturesConf
     Returns:
         (pd.DataFrame): Prepared data
     """
-    logging.debug("prepare_numerical_features - Start")
-
     # Apply drop outliers
     data = drop_outliers(data, config)
 
@@ -295,8 +291,6 @@ def prepare_numerical_features(data: pd.DataFrame, config: NumericalFeaturesConf
 
     # Apply standardisation
     data = standardise_features(data, config)
-
-    logging.debug("prepare_numerical_features - End")
 
     return data
 
@@ -312,13 +306,10 @@ def create_flag_feature(data: pd.DataFrame, config: FlagFeatureConfig) -> pd.Dat
     Returns:
         (pd.DataFrame): Prepared data
     """
-    logging.debug("create_flag_feature - Start")
 
-    logging.info("create_flag_feature - 🏳️ Column: %s", config.column_name)
+    logging.info(f"\t🏳 Creating flag feature from column {config.column_name}")
 
     # Create a flag feature where the column has a value
     data.loc[:, config.output_column_name] = data.loc[:, config.column_name].notna()
-
-    logging.debug("create_flag_feature - End")
 
     return data
