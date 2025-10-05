@@ -10,7 +10,7 @@ from dynaconf import Dynaconf
 import pytest
 
 # Import Package Modules
-from src.data_preparation.data_preparation_types import (
+from data_grimorium.data_preparation.data_preparation_types import (
     SentenceTransformersConfig,
     EmbeddingsConfig,
     PCAConfig,
@@ -21,11 +21,11 @@ from src.data_preparation.data_preparation_types import (
 )
 
 # Retrieve the root path
-root_path = os.getenv("DRUIDIC_GROVE_AI_ROOT_PATH")
+root_path = pathlib.Path(os.getenv("DATA_GRIMORIUM_ROOT_PATH"))
 
 # Read the configuration file
 config = Dynaconf(
-    settings_files=[pathlib.Path(root_path) / "configuration" / "stackoverflow_settings.toml"],
+    settings_files=[root_path / "configuration" / "stackoverflow_settings.toml"],
     environments=True,
     env="pytest",
 )
@@ -134,7 +134,7 @@ def fixture_sentences(file_path: str = "data/test/sentences.txt") -> List[str]:
     Fixture for a list of sentences to encode.
 
     Args:
-        file_path (String): Path to the file containing the sentences.
+        file_path (str): Path to the file containing the sentences.
 
     Returns:
         (List[str]): List of sentences to encode
