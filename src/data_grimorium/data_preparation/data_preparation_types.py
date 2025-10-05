@@ -13,7 +13,7 @@ class SentenceTransformersConfig(BaseModel):
     Configuration for embedding generation with SentenceTransformers library
 
     Attributes:
-        model_name (String): The name of the model to use
+        model_name (str): The name of the model to use
         numpy_tensor (Boolean): Output tensor to be a numpy array
     """
 
@@ -26,7 +26,7 @@ class EmbeddingsConfig(BaseModel):
     Configuration for an embedding generation model
 
     Attributes:
-        method (String): The embedding approach to use (e.g., SentenceTransformer)
+        method (str): The embedding approach to use (e.g., SentenceTransformer)
         embedding_model_config (Union[SentenceTransformersConfig]): Model configuration
     """
 
@@ -52,7 +52,7 @@ class CompressEmbeddingsConfig(BaseModel):
     Configuration for compressing embeddings model
 
     Attributes:
-        method (String): The compress approach to use (e.g., PCA)
+        method (str): The compress approach to use (e.g., PCA)
         compress_model_config (Union[PCAConfig]): Model configuration
     """
 
@@ -83,7 +83,7 @@ class DateExtractionConfig(BaseModel):
     Configuration to extract information from a date field
 
     Attributes:
-        column_name (String): Column name containing the date
+        column_name (str): Column name containing the date
         extract_year (Boolean): Flag to indicate to extract the year
         extract_month (Boolean): Flag to indicate to extract the month
     """
@@ -126,7 +126,7 @@ class NumericalFeaturesConfig(BaseModel):
     Configuration for numerical features transformation
 
     Attributes:
-        column_name (String): Name of the numerical column to process
+        column_name (str): Name of the numerical column to process
         standardisation (Optional[StandardisationMethod]): Standardisation method to apply
         drop_outliers (Optional[OutlierMethod]): Outlier removal method to use
         nan_values (Optional[NanStrategy]): Strategy to handle missing values
@@ -147,8 +147,8 @@ class FlagFeatureConfig(BaseModel):
     Configuration for flag features transformation
 
     Attributes:
-        column_name (String): Name of the numerical column to process
-        output_column_name (String): Name of the output column
+        column_name (str): Name of the numerical column to process
+        output_column_name (str): Name of the output column
     """
 
     column_name: str = Field(..., description="Name of the column to process")
