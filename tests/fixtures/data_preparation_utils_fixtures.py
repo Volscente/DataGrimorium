@@ -37,7 +37,7 @@ def fixture_sentence_transformers_config(
 ) -> SentenceTransformersConfig:
     """
     Fixture for a SentenceTransformersConfig object
-    from src/custom_types.SentenceTransformersConfig class definition.
+    from src/data_grimorium/data_preparation/data_preparation_types.SentenceTransformersConfig class definition.
 
     Args:
         sentence_transformers_config (Dictionary): Configurations for a SentenceTransformersConfig object
@@ -55,7 +55,7 @@ def fixture_embeddings_config(
 ) -> EmbeddingsConfig:
     """
     Fixture for an EmbeddingsConfig object
-    from src/custom_types.EmbeddingsConfig class definition.
+    from src/data_grimorium/data_preparation/data_preparation_types.EmbeddingsConfig class definition.
 
     Args:
         fixture_sentence_transformers_config (SentenceTransformersConfig): Configurations for a SentenceTransformersConfig object
@@ -74,7 +74,7 @@ def fixture_embeddings_config(
 def fixture_pca_config(pca_config: dict = config["data_preparation"]["pca_config"]) -> PCAConfig:
     """
     Fixture for a PCAConfig object
-    from src/custom_types.PCAConfig class definition.
+    from src/data_grimorium/data_preparation/data_preparation_types.PCAConfig class definition.
 
     Args:
         pca_config (Dictionary): PCA configurations
@@ -92,7 +92,7 @@ def fixture_compress_embeddings_config(
 ) -> CompressEmbeddingsConfig:
     """
     Fixture for a CompressEmbeddingsConfig object
-    from src/custom_types.CompressEmbeddingsConfig class definition.
+    from src/data_grimorium/data_preparation/data_preparation_types.CompressEmbeddingsConfig class definition.
 
     Args:
         fixture_pca_config (PCAConfig): Configurations for a PCAConfig object
@@ -113,7 +113,7 @@ def fixture_encode_text_config(
 ) -> EncodingTextConfig:
     """
     Fixture for an EncodeTextConfig object
-    from src/custom_types.EncodingTextConfig class definition.
+    from src/data_grimorium/data_preparation/data_preparation_types.EncodingTextConfig class definition.
 
     Args:
         fixture_embeddings_config (EmbeddingsConfig): Configuration for embedding generation
@@ -161,7 +161,7 @@ def fixture_date_extraction_config(
 ) -> DateExtractionConfig:
     """
     Fixture for a DateExtractionConfig object
-    from src/custom_types.DateExtractionConfig class definition.
+    from src/data_grimorium/data_preparation/data_preparation_types.DateExtractionConfig class definition.
 
     Args:
         date_extraction_config (Dictionary): Configurations for a DateExtractionConfig object
@@ -178,7 +178,7 @@ def fixture_numerical_features_config(
 ) -> NumericalFeaturesConfig:
     """
     Fixture for a NumericalFeaturesConfig object
-    from src/custom_types.NumericalFeaturesConfig class definition.
+    from src/data_grimorium/data_preparation/data_preparation_types.NumericalFeaturesConfig class definition.
 
     Args:
         numerical_features_config (Dictionary): Numerical feature transformation configurations
