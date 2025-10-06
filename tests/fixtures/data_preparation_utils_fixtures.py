@@ -25,7 +25,7 @@ root_path = pathlib.Path(os.getenv("DATA_GRIMORIUM_ROOT_PATH"))
 
 # Read the configuration file
 config = Dynaconf(
-    settings_files=[root_path / "configuration" / "stackoverflow_settings.toml"],
+    settings_files=[root_path / "configuration" / "datagrimorium_settings.toml"],
     environments=True,
     env="pytest",
 )
@@ -141,9 +141,6 @@ def fixture_sentences(file_path: str = "data/test/sentences.txt") -> List[str]:
     """
     # Initialise sentences
     sentences = []
-
-    # Retrieve the root path
-    root_path = pathlib.Path(os.getenv("DRUIDIC_GROVE_AI_ROOT_PATH"))
 
     # Update the file_path with the project root directory
     file_path = root_path / pathlib.Path(file_path)
