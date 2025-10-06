@@ -12,6 +12,8 @@ dependencies = [
     "google-cloud-bigquery>=3.38.0",
     "pandas>=2.3.2",
     "pydantic>=2.11.9",
+    "scikit-learn>=1.7.2",
+    "sentence-transformers>=5.1.1",
 ]
 readme = "README.md"
 license = "GPL-3.0"
