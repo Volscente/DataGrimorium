@@ -3,17 +3,8 @@ The module includes Pydantic types for BigQuery Connector.
 """
 
 # Import Standard Modules
-from enum import Enum
 from pydantic import BaseModel, Field
 from typing import Optional, Union, List
-
-
-class GPCProjects(str, Enum):
-    """
-    Available GPC Projects
-    """
-
-    DEEP_LEARNING = "deep-learning-438509"
 
 
 class BQClientConfig(BaseModel):
@@ -21,13 +12,10 @@ class BQClientConfig(BaseModel):
     BigQuery Client configuration
 
     Attributes:
-        project_id (GPCProjects): The Google Cloud project ID, which is
-            restricted to 'deep-learning-438509'.
+        project_id (str): The Google Cloud project ID.
     """
 
-    project_id: GPCProjects = Field(
-        default=GPCProjects.DEEP_LEARNING, description="Project ID on Google Cloud Platform"
-    )
+    project_id: str = Field(..., description="Project ID on Google Cloud Platform")
 
 
 class BQQueryParameter(BaseModel):

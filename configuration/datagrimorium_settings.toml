@@ -1,8 +1,5 @@
 # ---------- Config ----------
 [pytest]
-[pytest.bigquery.client]
-project_id = 'deep-learning-438509'
-
 [pytest.bigquery.read_query_config]
 query_path = 'data/test/test_read_query.sql'
 query_parameters.id.name = 'id'

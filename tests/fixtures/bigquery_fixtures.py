@@ -29,7 +29,7 @@ config = Dynaconf(
 
 @pytest.fixture
 def fixture_bigquery_client_config(
-    project_id: str = config["bigquery"]["client"]["project_id"],
+    project_id: str = os.getenv("PROJECT_ID"),
 ) -> BQClientConfig:
     """
     This fixture returns a BigQueryBQClientConfig object
