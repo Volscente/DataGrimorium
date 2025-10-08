@@ -1,0 +1,48 @@
+# ---------- Config ----------
+[pytest]
+[pytest.bigquery.read_query_config]
+query_path = 'data/test/test_read_query.sql'
+query_parameters.id.name = 'id'
+query_parameters.id.type = 'INTEGER'
+query_parameters.id.value = 3863
+query_parameters.display_name.name = 'display_name'
+query_parameters.display_name.type = 'STRING'
+query_parameters.display_name.value = 'Adam Hughes'
+
+[pytest.bigquery.create_table_query_config]
+query_path = 'data/test/test_create_table_query.sql'
+query_parameters.id.name = 'id'
+query_parameters.id.type = 'INTEGER'
+query_parameters.id.value = 1
+query_parameters.display_name.name = 'display_name'
+query_parameters.display_name.type = 'STRING'
+query_parameters.display_name.value = 'test_name'
+
+[pytest.data_preparation.sentence_transformers_config]
+model_name = 'all-MiniLM-L6-v2'
+numpy_tensor = true
+
+[pytest.data_preparation.embeddings_config]
+method = 'SentenceTransformer'
+
+[pytest.data_preparation.pca_config]
+n_components = 4
+
+[pytest.data_preparation.compress_embeddings_config]
+method = 'PCA'
+
+[pytest.data_preparation.encode_text_config]
+model_name = 'distilbert-base-uncased'
+return_tensors = 'pt'
+
+[pytest.data_preparation.date_extraction_config]
+column_name = 'creation_date'
+extract_year = true
+extract_month = true
+
+[pytest.data_preparation.numerical_features_config]
+column_name = 'reputation'
+standardisation = 'min_max_scaler'
+drop_outliers.method = 'iqr'
+nan_values = 'drop_nan'
+# ----------------------------
