@@ -145,9 +145,9 @@ def test_execute_query_from_config(
         assert expected_output["id"] == row_id and expected_output["name"] == row_display_name
 
 
-# @pytest.mark.skip(
-#     reason="This test is skipped because GCP credentials are not stored on GitHub Secret"
-# )
+@pytest.mark.skip(
+    reason="This test is skipped because GCP credentials are not stored on GitHub Secret"
+)
 @pytest.mark.parametrize(
     "query_config_dict, expected_configs",
     [
