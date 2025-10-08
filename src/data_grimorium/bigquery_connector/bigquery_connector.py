@@ -163,7 +163,7 @@ class BigQueryConnector:
 
     def table_exists(self, table_name: str, dataset_name: str) -> bool:
         """
-        Check if a table exists in a dataset
+        Check if a table exists in a dataset.
 
         Args:
             table_name (str): Name of the table
