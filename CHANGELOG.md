@@ -23,7 +23,41 @@
 - [x] Add Pydantic `OutlierConfig` in `data_grimorium/data_preparation/data_preparation_types.py`
 - [x] Add Pydantic `NumericalFeaturesConfig` in `data_grimorium/data_preparation/data_preparation_types.py`
 - [x] Add Pydantic `FlagFeatureConfig` in `data_grimorium/data_preparation/data_preparation_types.py`
-
+- [x] Add Function `generate_embeddings` in `data_grimorium/data_preparation/data_preparation_utils.py`
+- [x] Add Function `compress_embeddings` in `data_grimorium/data_preparation/data_preparation_utils.py`
+- [x] Add Function `encode_text` in `data_grimorium/data_preparation/data_preparation_utils.py`
+- [x] Add Function `extract_date_information` in `data_grimorium/data_preparation/data_preparation_utils.py`
+- [x] Add Function `standardise_features` in `data_grimorium/data_preparation/data_preparation_utils.py`
+- [x] Add Function `drop_outliers` in `data_grimorium/data_preparation/data_preparation_utils.py`
+- [x] Add Function `manage_nan_values` in `data_grimorium/data_preparation/data_preparation_utils.py`
+- [x] Add Function `prepare_numerical_features` in `data_grimorium/data_preparation/data_preparation_utils.py`
+- [x] Add Function `create_flag_feature` in `data_grimorium/data_preparation/data_preparation_utils.py`
+- [x] Add PyTest `test_set_client` in `tests/bigquery_connector/test_bigquery_connector.py`
+- [x] Add PyTest `test_build_query_parameters` in `tests/bigquery_connector/test_bigquery_connector.py`
+- [x] Add PyTest `test_table_exists` in `tests/bigquery_connector/test_bigquery_connector.py`
+- [x] Add PyTest `test_execute_query_from_config` in `tests/bigquery_connector/test_bigquery_connector.py`
+- [x] Add PyTest `test_wrap_dictionary_to_query_config` in `tests/bigquery_connector/test_bigquery_connector.py`
+- [x] Add PyTest `test_generate_embeddings` in `tests/data_preparation/test_data_preparation.py`
+- [x] Add PyTest `test_compress_embeddings` in `tests/data_preparation/test_data_preparation.py`
+- [x] Add PyTest `test_encode_text` in `tests/data_preparation/test_data_preparation.py`
+- [x] Add PyTest `test_extract_date_information` in `tests/data_preparation/test_data_preparation.py`
+- [x] Add PyTest `test_standardise_features` in `tests/data_preparation/test_data_preparation.py`
+- [x] Add PyTest `test_drop_outliers` in `tests/data_preparation/test_data_preparation.py`
+- [x] Add PyTest `test_manage_nan_values` in `tests/data_preparation/test_data_preparation.py`
+- [x] Add PyTest `test_prepare_numerical_features` in `tests/data_preparation/test_data_preparation.py`
+- [x] Add PyTest `test_create_flag_feature` in `tests/data_preparation/test_data_preparation.py`
+- [x] Add PyTest Fixture `fixture_bigquery_client_config` in `tests/fixtures/bigquery_fixtures.py`
+- [x] Add PyTest Fixture `fixture_bigquery_connector` in `tests/fixtures/bigquery_fixtures.py`
+- [x] Add PyTest Fixture `fixture_bigquery_read_query_config` in `tests/fixtures/bigquery_fixtures.py`
+- [x] Add PyTest Fixture `fixture_bigquery_create_table_query_config` in `tests/fixtures/bigquery_fixtures.py`
+- [x] Add PyTest Fixture `fixture_sentence_transformers_config` in `tests/fixtures/data_preparation_utils_fixtures.py`
+- [x] Add PyTest Fixture `fixture_embeddings_config` in `tests/fixtures/data_preparation_utils_fixtures.py`
+- [x] Add PyTest Fixture `fixture_pca_config` in `tests/fixtures/data_preparation_utils_fixtures.py`
+- [x] Add PyTest Fixture `fixture_compress_embeddings_config` in `tests/fixtures/data_preparation_utils_fixtures.py`
+- [x] Add PyTest Fixture `fixture_encode_text_config` in `tests/fixtures/data_preparation_utils_fixtures.py`
+- [x] Add PyTest Fixture `fixture_sentences` in `tests/fixtures/data_preparation_utils_fixtures.py`
+- [x] Add PyTest Fixture `fixture_date_extraction_config` in `tests/fixtures/data_preparation_utils_fixtures.py`
+- [x] Add PyTest Fixture `fixture_numerical_features_config` in `tests/fixtures/data_preparation_utils_fixtures.py`
 
 # v.0.1.0a
 
