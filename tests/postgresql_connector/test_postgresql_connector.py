@@ -4,26 +4,35 @@ module src.postgresql_connector.
 """
 
 # Import Standard Libraries
+import os
+import pathlib
 import pytest
 import psycopg2
 import time
+from dynaconf import Dynaconf
 from types import ModuleType
 
 # Import Package Modules
 from data_grimorium.postgresql_connector.postgresql_connector import PostgreSQLConnector
-from data_grimorium.postgresql_connector.postgresql_types import PostgreSQLClientConfig
+
+# Retrieve the root path
+root_path = os.getenv("DATA_GRIMORIUM_ROOT_PATH")
+
+# Read the configuration file
+config = Dynaconf(
+    settings_files=[pathlib.Path(root_path) / "configuration" / "datagrimorium_settings.toml"],
+    environments=True,
+    env="pytest",
+)
 
 
-def setup_module(
-    module: ModuleType, fixture_postgresql_client_config: PostgreSQLClientConfig
-) -> None:
+def setup_module(module: ModuleType) -> None:
     """
     Setup run once before any tests in this module to check if PostgreSQL database
     is running.
 
     Args:
         module (ModuleType): Current Python module
-        fixture_postgresql_client_config (PostgreSQLClientConfig): Client configs
     """
     max_retries = 3
 
@@ -31,11 +40,11 @@ def setup_module(
     for attempt in range(max_retries):
         try:
             conn = psycopg2.connect(
-                host=fixture_postgresql_client_config.host,
-                port=fixture_postgresql_client_config.port,
-                user=fixture_postgresql_client_config.user,
-                password=fixture_postgresql_client_config.password,
-                dbname=fixture_postgresql_client_config.dbname,
+                host=config["postgresql"]["client"]["host"],
+                port=config["postgresql"]["client"]["port"],
+                user=config["postgresql"]["client"]["user"],
+                password=config["postgresql"]["client"]["password"],
+                dbname=config["postgresql"]["client"]["dbname"],
                 connect_timeout=3,
             )
             conn.close()

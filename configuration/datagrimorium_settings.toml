@@ -45,4 +45,11 @@ column_name = 'reputation'
 standardisation = 'min_max_scaler'
 drop_outliers.method = 'iqr'
 nan_values = 'drop_nan'
+
+[pytest.postgresql.client]
+dbname = 'test_postgres_db'
+user = 'test_postgres_user'
+password = 'postgres'
+host = 'localhost'
+port = 5432
 # ----------------------------
