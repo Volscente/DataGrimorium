@@ -14,11 +14,11 @@ from data_grimorium.postgresql_connector.postgresql_connector import PostgreSQLC
 
 
 # Retrieve the root path
-root_path = os.getenv("DRUIDIC_GROVE_AI_ROOT_PATH")
+root_path = os.getenv("DATA_GRIMORIUM_ROOT_PATH")
 
 # Read the configuration file
 config = Dynaconf(
-    settings_files=[pathlib.Path(root_path) / "configuration" / "stackoverflow_settings.toml"],
+    settings_files=[pathlib.Path(root_path) / "configuration" / "datagrimorium_settings.toml"],
     environments=True,
     env="pytest",
 )
