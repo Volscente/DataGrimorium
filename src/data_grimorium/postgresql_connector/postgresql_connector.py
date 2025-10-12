@@ -43,18 +43,10 @@ class PostgreSQLConnector:
         """
         Set the attribute ``_client`` with an instance of the PostgreSQL Client.
         """
-        self._logger.debug("_set_client - Start")
-
-        self._logger.info("_set_client - Set the PostgreSQL client")
-
         # Initialise the client
         self._client = psycopg2.connect(**self._client_config.model_dump())
 
         # Create a cursor
         self._cursor = self._client.cursor()
 
-        self._logger.info(
-            f"_set_client - 🛢 Connected to Database {self._cursor.connection.info.dbname}"
-        )
-
-        self._logger.debug("_set_client - End")
+        logging.info(f"_set_client - 🛢 Connected to Database {self._cursor.connection.info.dbname}")
