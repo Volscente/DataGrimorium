@@ -46,5 +46,20 @@ class PostgreSQLClientConfig(BaseModel):
 
 
 class PostgreSQLQueryConfig(BaseModel):
+    """
+    PostgreSQL query configuration with information on how to execute the query.
+
+    Attributes:
+        query_path (str): Path to the query file.
+        local_path (str): [Optional] Local path where to save the data
+        table_name (str): [Optional] Table name
+    """
+
+    query_path: str = Field(..., description="Path to the query file", alias="query_path")
+    local_path: str = Field(
+        None, description="Local path where to save the data", alias="local_path"
+    )
+    table_name: str = Field(None, description="Table name", alias="table_name")
+
     # TODO
     pass
