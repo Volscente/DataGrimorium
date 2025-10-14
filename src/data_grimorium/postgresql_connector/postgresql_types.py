@@ -43,3 +43,8 @@ class PostgreSQLClientConfig(BaseModel):
         Return the model as a single-row pandas DataFrame.
         """
         return pd.DataFrame([self.as_dict()])
+
+
+class PostgreSQLQueryConfig(BaseModel):
+    # TODO
+    pass

@@ -6,6 +6,9 @@ with the PostgreSQL database.
 # Import Standard Libraries
 import logging
 import psycopg2
+import pandas as pd
+from typing import Union
+
 
 # Import Package Modules
 from data_grimorium.postgresql_connector.postgresql_types import PostgreSQLClientConfig
@@ -50,3 +53,7 @@ class PostgreSQLConnector:
         self._cursor = self._client.cursor()
 
         logging.info(f"_set_client - 🛢 Connected to Database {self._cursor.connection.info.dbname}")
+
+    def execute_query_from_config(self) -> Union[pd.DataFrame, bool]:
+        # TODO: Implement
+        pass
