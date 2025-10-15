@@ -26,6 +26,39 @@ class PostgreSQLClientConfig(BaseModel):
     host: str = Field(..., description="Host URL", alias="host")
     port: int = Field(..., description="Port number", alias="port")
 
+    @classmethod
+    def get_schema(cls) -> Dict[str, Any]:
+        """
+        Return the JSON schema.
+        """
+        return {
+            "type": "object",
+            "description": "PostgreSQL client configuration.",
+            "properties": {
+                "dbname": {
+                    "type": "string",
+                    "description": "Database name",
+                },
+                "user": {
+                    "type": "string",
+                    "description": "Username",
+                },
+                "password": {
+                    "type": "string",
+                    "description": "User password",
+                },
+                "host": {
+                    "type": "string",
+                    "description": "Host url",
+                },
+                "port": {
+                    "type": "integer",
+                    "description": "Port number",
+                },
+            },
+            "required": ["dbname", "user", "password", "host", "port"],
+        }
+
     def as_dict(self) -> Dict[str, Any]:
         """
         Return the model as a Python dictionary (using field aliases).
