@@ -37,23 +37,23 @@ class PostgreSQLClientConfig(BaseModel):
             "properties": {
                 "dbname": {
                     "type": "string",
-                    "description": "Database name",
+                    "description": "Database name.",
                 },
                 "user": {
                     "type": "string",
-                    "description": "Username",
+                    "description": "Username.",
                 },
                 "password": {
                     "type": "string",
-                    "description": "User password",
+                    "description": "User password.",
                 },
                 "host": {
                     "type": "string",
-                    "description": "Host url",
+                    "description": "Host url.",
                 },
                 "port": {
                     "type": "integer",
-                    "description": "Port number",
+                    "description": "Port number.",
                 },
             },
             "required": ["dbname", "user", "password", "host", "port"],
@@ -86,6 +86,7 @@ class PostgreSQLQueryConfig(BaseModel):
         query_path (str): Path to the query file.
         local_path (str): [Optional] Local path where to save the data
         table_name (str): [Optional] Table name
+        query_parameters (dict): [Optional] Query parameters
     """
 
     query_path: str = Field(..., description="Path to the query file", alias="query_path")
@@ -93,6 +94,53 @@ class PostgreSQLQueryConfig(BaseModel):
         None, description="Local path where to save the data", alias="local_path"
     )
     table_name: str = Field(None, description="Table name", alias="table_name")
+    query_parameters: Dict[str, Any] = Field(
+        None, description="Query parameters", alias="query_parameters"
+    )
 
-    # TODO
-    pass
+    @classmethod
+    def get_schema(cls) -> Dict[str, Any]:
+        """
+        Return the JSON schema.
+        """
+        return {
+            "type": "object",
+            "description": "PostgreSQL query configuration with information on how to execute the query.",
+            "properties": {
+                "query_path": {
+                    "type": "string",
+                    "description": "Path to the query file.",
+                },
+                "local_path": {
+                    "type": ["string", "null"],
+                    "description": "Local path where to save the data.",
+                },
+                "table_name": {
+                    "type": ["string", "null"],
+                    "description": "Table name.",
+                },
+                "query_parameters": {
+                    "type": ["Dict[str, Any]", "null"],
+                    "description": "Query parameters.",
+                },
+            },
+            "required": ["query_path"],
+        }
+
+    def as_dict(self) -> Dict[str, Any]:
+        """
+        Return the model as a Python dictionary (using field aliases).
+        """
+        return self.model_dump(by_alias=True)
+
+    def as_json(self) -> str:
+        """
+        Return the model as a JSON string (with indentation for readability).
+        """
+        return self.model_dump_json(by_alias=True, indent=2)
+
+    def as_df(self) -> pd.DataFrame:
+        """
+        Return the model as a single-row pandas DataFrame.
+        """
+        return pd.DataFrame([self.as_dict()])
