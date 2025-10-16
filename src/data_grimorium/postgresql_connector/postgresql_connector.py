@@ -11,7 +11,10 @@ from typing import Union
 
 
 # Import Package Modules
-from data_grimorium.postgresql_connector.postgresql_types import PostgreSQLClientConfig
+from data_grimorium.postgresql_connector.postgresql_types import (
+    PostgreSQLClientConfig,
+    PostgreSQLQueryConfig,
+)
 
 # Setup logging
 logging.basicConfig(
@@ -39,21 +42,28 @@ class PostgreSQLConnector:
         # Initialise attributes
         self._client_config = client_config
 
-        # Set client
-        self._set_client()
-
-    def _set_client(self):
+    def _get_connection(self):
         """
-        Set the attribute ``_client`` with an instance of the PostgreSQL Client.
+        Creates and returns a new PostgreSQL connection.
         """
-        # Initialise the client
-        self._client = psycopg2.connect(**self._client_config.model_dump())
+        # Open connection
+        connection = psycopg2.connect(**self._client_config.model_dump())
 
-        # Create a cursor
-        self._cursor = self._client.cursor()
+        logging.info(f"_get_connection - 🛢 Connected to database {connection.info.dbname}")
 
-        logging.info(f"_set_client - 🛢 Connected to Database {self._cursor.connection.info.dbname}")
+        return connection
 
-    def execute_query_from_config(self) -> Union[pd.DataFrame, bool]:
-        # TODO: Implement
+    def execute_query_from_config(
+        self, query_config: PostgreSQLQueryConfig
+    ) -> Union[pd.DataFrame, bool]:
+        """
+        Execute a query from local path and with a certain set of parameter configurations.
+
+        Args:
+            query_config (PostgreSQLQueryConfig): Query configuration
+
+        Returns:
+            (Union[pd.DataFrame, bool]): The result of the query execution.
+            Either the data or a bool in case of table creation.
+        """
         pass
