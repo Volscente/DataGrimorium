@@ -9,7 +9,10 @@ from dynaconf import Dynaconf
 import pytest
 
 # Import Package Modules
-from data_grimorium.postgresql_connector.postgresql_types import PostgreSQLClientConfig
+from data_grimorium.postgresql_connector.postgresql_types import (
+    PostgreSQLClientConfig,
+    PostgreSQLQueryConfig,
+)
 from data_grimorium.postgresql_connector.postgresql_connector import PostgreSQLConnector
 
 
@@ -33,7 +36,7 @@ def fixture_postgresql_client_config(
     from src/postgresql_connector/postgresql_types.py.
 
     Args:
-        client_config (Dictionary): Configurations for a PostgreSQLClientConfig object
+        client_config (Dictionary): Configurations for a PostgreSQLClientConfig object.
 
     Returns:
         (PostgreSQLClientConfig): Object of PostgreSQL client configurations
@@ -49,9 +52,25 @@ def fixture_postgresql_connector(
     Fixture for a PostgreSQLConnector object in order to connect to a PostgreSQL Database.
 
     Args:
-        fixture_postgresql_client_config (PostgreSQLClientConfig): Client configurations
+        fixture_postgresql_client_config (PostgreSQLClientConfig): Client configurations.
 
     Returns:
         (PostgreSQLConnector): Object of PostgreSQL Connector
     """
     return PostgreSQLConnector(client_config=fixture_postgresql_client_config)
+
+
+@pytest.fixture
+def fixture_postgresql_create_table_query(
+    query_config=config["postgresql"]["create_table_query_config"],
+) -> PostgreSQLQueryConfig:
+    """
+    Fixture for a PostgreSQLQueryConfig object in order to create a table.
+
+    Args:
+        query_config (PostgreSQLQueryConfig): Query configurations.
+
+    Returns:
+        (PostgreSQLQueryConfig): PostgreSQL query configuration object.
+    """
+    return PostgreSQLQueryConfig(**query_config)
