@@ -28,7 +28,7 @@ def read_file_from_path(file_path: pathlib.Path, root_path: pathlib.Path) -> str
 
     # Check if the root_path exists
     if not root_path.exists():
-        logging.error(f"🚨 Root path {root_path.as_posix()} does not exist")
+        logging.error(f"\t🚨 Root path {root_path.as_posix()} does not exist")
         raise EnvironmentError("The root path does not exist")
 
     # Update the file_path with the project root directory
@@ -36,12 +36,12 @@ def read_file_from_path(file_path: pathlib.Path, root_path: pathlib.Path) -> str
 
     # Check if the file_path exists
     if file_path.exists():
-        logging.info(f"📖 Reading file from {file_path.as_posix()}")
+        logging.info(f"\t📖 Reading file from {file_path.as_posix()}")
 
         # Read file
         with open(file_path, "r", encoding="utf-8") as file:
             file_read = file.read()
     else:
-        raise FileNotFoundError(f"❌ Unable to locate file: {file_path.as_posix()}")
+        raise FileNotFoundError(f"\t❌ Unable to locate file: {file_path.as_posix()}")
 
     return file_read

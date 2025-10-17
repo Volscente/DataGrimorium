@@ -12,6 +12,7 @@ from typing import Union
 
 
 # Import Package Modules
+from data_grimorium.general_utils.general_utils import read_file_from_path
 from data_grimorium.postgresql_connector.postgresql_types import (
     PostgreSQLClientConfig,
     PostgreSQLQueryConfig,
@@ -30,10 +31,11 @@ class PostgreSQLConnector:
     in order to query PostgreSQL datasets and tables.
 
     Attributes:
+        _root_path (pathlib.Path): Root path of the project
         _client_config (PostgreSQLClientConfig): Client configurations
     """
 
-    def __init__(self, client_config: PostgreSQLClientConfig):
+    def __init__(self, client_config: PostgreSQLClientConfig, root_path: Path):
         """
         Constructor of the class PostgreSQLConnector
 
@@ -42,6 +44,7 @@ class PostgreSQLConnector:
         """
         # Initialise attributes
         self._client_config = client_config
+        self._root_path = root_path
 
     def _get_connection(self):
         """
@@ -50,7 +53,7 @@ class PostgreSQLConnector:
         # Open connection
         connection = psycopg2.connect(**self._client_config.model_dump())
 
-        logging.info(f"_get_connection - 🛢 Connected to database {connection.info.dbname}")
+        logging.info(f"🛢 Connected to database {connection.info.dbname}")
 
         return connection
 
@@ -70,19 +73,14 @@ class PostgreSQLConnector:
         # Retrieve query path
         query_path = Path(query_config.query_path)
 
-        # Check if path exists
-        if not query_path.exists():
-            raise FileNotFoundError(f"❌ Query file not found: {query_path}")
-
-        # Read SQL query
-        with open(query_path, "r", encoding="utf-8") as file:
-            query = file.read()
+        # Read query
+        query = read_file_from_path(query_path, self._root_path)
 
         # Execute within a context manager to auto-close connection
-        # TODO: Check
         try:
             with self._get_connection() as conn:
                 with conn.cursor() as cur:
+                    # Execute the query with the parameters (if present)
                     cur.execute(query, query_config.parameters or None)
 
                     # If query returns data (e.g., SELECT), fetch into DataFrame
@@ -94,11 +92,9 @@ class PostgreSQLConnector:
                         result = True  # For CREATE, INSERT, UPDATE, etc.
 
                     conn.commit()
-                    logging.info(
-                        f"execute_query_from_config - ✅ Query executed successfully from {query_path}"
-                    )
+                    logging.info(f"✅ Query executed successfully from {query_path}")
                     return result
 
         except psycopg2.Error as e:
-            logging.error(f"execute_query_from_config - ❌ Database error: {e}")
+            logging.error(f"❌ Database error: {e}")
             raise
