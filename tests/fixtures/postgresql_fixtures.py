@@ -73,4 +73,4 @@ def fixture_postgresql_create_table_query(
     Returns:
         (PostgreSQLQueryConfig): PostgreSQL query configuration object.
     """
-    return PostgreSQLQueryConfig(**query_config)
+    return PostgreSQLQueryConfig(**query_config.to_dict())
