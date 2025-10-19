@@ -5,8 +5,8 @@ The module includes Fixtures related to the module "postgresql_connector".
 # Import Standard Libraries
 import os
 import pathlib
-from dynaconf import Dynaconf
 import pytest
+from dynaconf import Dynaconf
 
 # Import Package Modules
 from data_grimorium.postgresql_connector.postgresql_types import (
@@ -17,11 +17,11 @@ from data_grimorium.postgresql_connector.postgresql_connector import PostgreSQLC
 
 
 # Retrieve the root path
-root_path = os.getenv("DATA_GRIMORIUM_ROOT_PATH")
+root_path = pathlib.Path(os.getenv("DATA_GRIMORIUM_ROOT_PATH"))
 
 # Read the configuration file
 config = Dynaconf(
-    settings_files=[pathlib.Path(root_path) / "configuration" / "datagrimorium_settings.toml"],
+    settings_files=[root_path / "configuration" / "datagrimorium_settings.toml"],
     environments=True,
     env="pytest",
 )
@@ -57,7 +57,7 @@ def fixture_postgresql_connector(
     Returns:
         (PostgreSQLConnector): Object of PostgreSQL Connector
     """
-    return PostgreSQLConnector(client_config=fixture_postgresql_client_config)
+    return PostgreSQLConnector(client_config=fixture_postgresql_client_config, root_path=root_path)
 
 
 @pytest.fixture
