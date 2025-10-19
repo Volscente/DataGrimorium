@@ -81,7 +81,7 @@ class PostgreSQLConnector:
             with self._get_connection() as conn:
                 with conn.cursor() as cur:
                     # Execute the query with the parameters (if present)
-                    cur.execute(query, query_config.parameters or None)
+                    cur.execute(query, query_config.query_parameters or None)
 
                     # If query returns data (e.g., SELECT), fetch into DataFrame
                     if cur.description:

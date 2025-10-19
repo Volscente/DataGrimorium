@@ -9,8 +9,11 @@ import pathlib
 import pytest
 import psycopg2
 import time
+import pandas as pd
+import pandas.testing as pdt
 from dynaconf import Dynaconf
 from types import ModuleType
+from typing import Union
 
 # Import Package Modules
 from data_grimorium.postgresql_connector.postgresql_connector import PostgreSQLConnector
@@ -63,7 +66,7 @@ def test_set_client(
     database_name: str,
 ) -> bool:
     """
-    Test the function src/postgresql_connector/postgresql_connector._set_client
+    Test the function postgresql_connector/postgresql_connector._set_client
     by checking the ``self._client`` and ``self._cursor`` attributes.
 
     Args:
@@ -73,3 +76,34 @@ def test_set_client(
     assert fixture_postgresql_connector._client is not None
     assert fixture_postgresql_connector._client.info.dbname == database_name
     assert fixture_postgresql_connector._cursor.connection.info.dbname == database_name
+
+
+@pytest.mark.parametrize(
+    "fixture_name, expected_output", [("fixture_postgresql_create_table_query", True)]
+)
+def test_execute_query_from_config(
+    fixture_name: str,
+    expected_output: Union[pd.DataFrame, bool],
+    fixture_postgresql_connector: PostgreSQLConnector,
+    request: pytest.FixtureRequest,
+) -> bool:
+    """
+    Test the function postgresql_connector/postgresql_connector.execute_query_from_config.
+
+    Args:
+        fixture_name (str): Name of the fixture query to use.
+        expected_output (Union[pd.DataFrame, bool]): Expected output.
+        fixture_postgresql_connector (PostgreSQLConnector): PostgreSQL Connector.
+        request (FixtureRequest): Object to load the required fixture.
+    """
+    # Load fixture
+    query_config = request.getfixturevalue(fixture_name)
+
+    # Execute query
+    result = fixture_postgresql_connector.execute_query_from_config(query_config)
+
+    if isinstance(result, pd.DataFrame):
+        pdt.assert_frame_equal(result, expected_output)
+    else:
+        # TODO: Resolve from ChatGPT conversation
+        assert result == expected_output
