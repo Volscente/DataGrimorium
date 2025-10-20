@@ -53,7 +53,7 @@ password = 'postgres'
 host = 'localhost'
 port = 5432
 
-[pytest.postgresql.create_table_query_config]
-query_path = 'data/test/postgresql_connector/test_create_table_query.sql'
+[pytest.postgresql.create_query_config]
+query_path = 'data/test/postgresql_connector/test_create_query.sql'
 table_name = 'test_table_creation'
 # ----------------------------

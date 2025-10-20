@@ -61,8 +61,8 @@ def fixture_postgresql_connector(
 
 
 @pytest.fixture
-def fixture_postgresql_create_table_query(
-    query_config=config["postgresql"]["create_table_query_config"],
+def fixture_postgresql_create_query(
+    query_config=config["postgresql"]["create_query_config"],
 ) -> PostgreSQLQueryConfig:
     """
     Fixture for a PostgreSQLQueryConfig object in order to create a table.

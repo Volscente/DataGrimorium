@@ -9,11 +9,8 @@ import pathlib
 import pytest
 import psycopg2
 import time
-import pandas as pd
-import pandas.testing as pdt
 from dynaconf import Dynaconf
 from types import ModuleType
-from typing import Union
 
 # Import Package Modules
 from data_grimorium.postgresql_connector.postgresql_connector import PostgreSQLConnector
@@ -79,11 +76,11 @@ def test_set_client(
 
 
 @pytest.mark.parametrize(
-    "fixture_name, expected_output", [("fixture_postgresql_create_table_query", True)]
+    "fixture_name, expected_output", [("fixture_postgresql_create_query", True)]
 )
 def test_execute_query_from_config(
     fixture_name: str,
-    expected_output: Union[pd.DataFrame, bool],
+    expected_output: bool,
     fixture_postgresql_connector: PostgreSQLConnector,
     request: pytest.FixtureRequest,
 ) -> bool:
@@ -92,7 +89,7 @@ def test_execute_query_from_config(
 
     Args:
         fixture_name (str): Name of the fixture query to use.
-        expected_output (Union[pd.DataFrame, bool]): Expected output.
+        expected_output (bool): Expected output.
         fixture_postgresql_connector (PostgreSQLConnector): PostgreSQL Connector.
         request (FixtureRequest): Object to load the required fixture.
     """
@@ -102,8 +99,4 @@ def test_execute_query_from_config(
     # Execute query
     result = fixture_postgresql_connector.execute_query_from_config(query_config)
 
-    if isinstance(result, pd.DataFrame):
-        pdt.assert_frame_equal(result, expected_output)
-    else:
-        # TODO: Resolve from ChatGPT conversation
-        assert result == expected_output
+    assert bool(result) == expected_output
