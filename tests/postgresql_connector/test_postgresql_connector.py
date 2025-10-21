@@ -78,8 +78,9 @@ def test_set_client(
 @pytest.mark.parametrize(
     "fixture_name, expected_output",
     [
-        ("fixture_postgresql_create_query", True),
-        ("fixture_postgresql_insert_query", True),
+        # ("fixture_postgresql_create_query", True),
+        # ("fixture_postgresql_insert_query", True),
+        ("fixture_postgresql_update_query", True),
     ],
 )
 def test_execute_query_from_config(

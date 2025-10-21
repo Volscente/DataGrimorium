@@ -60,6 +60,12 @@ table_name = 'test_table_creation'
 [pytest.postgresql.insert_query_config]
 query_path = 'data/test/postgresql_connector/test_insert_query.sql'
 table_name = 'test_table_creation'
-query_parameters.row_id = 1
+query_parameters.row_id = '1'
 query_parameters.display_name = 'test_name'
+
+[pytest.postgresql.update_query_config]
+query_path = 'data/test/postgresql_connector/test_update_query.sql'
+table_name = 'test_table_creation'
+query_parameters.row_id = '1'
+query_parameters.display_name = 'test_name_updated'
 # ----------------------------

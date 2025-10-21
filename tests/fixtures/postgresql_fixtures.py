@@ -90,3 +90,19 @@ def fixture_postgresql_insert_query(
         (PostgreSQLQueryConfig): PostgreSQL query configuration object.
     """
     return PostgreSQLQueryConfig(**query_config.to_dict())
+
+
+@pytest.fixture
+def fixture_postgresql_update_query(
+    query_config=config["postgresql"]["update_query_config"],
+) -> PostgreSQLQueryConfig:
+    """
+    Fixture for a PostgreSQLQueryConfig object in order to update values in a table.
+
+    Args:
+        query_config (PostgreSQLQueryConfig): Query configurations.
+
+    Returns:
+        (PostgreSQLQueryConfig): PostgreSQL query configuration object.
+    """
+    return PostgreSQLQueryConfig(**query_config.to_dict())
