@@ -98,3 +98,31 @@ class PostgreSQLConnector:
         except psycopg2.Error as e:
             logging.error(f"❌ Database error: {e}")
             raise
+
+    def tables_exists(self, table_name: str) -> bool:
+        """
+        Check if a table exists in the database.
+
+        Args:
+            table_name (str): Name of the table to check.
+
+        Returns:
+            (bool): True if the table exists, False otherwise.
+        """
+        # Execute within a context manager to auto-close connection
+        try:
+            with self._get_connection() as conn:
+                with conn.cursor() as cur:
+                    # Execute the query with the parameters (if present)
+                    cur.execute(
+                        "select * from information_schema.tables where table_name=%s", (table_name,)
+                    )
+                    conn.commit()
+
+                    logging.info(f"🕵🏻 Table {table_name} exists? -> {bool(cur.rowcount)}")
+
+                    return bool(cur.rowcount)
+
+        except psycopg2.Error as e:
+            logging.error(f"❌ Database error: {e}")
+            raise
