@@ -78,8 +78,8 @@ def test_set_client(
 @pytest.mark.parametrize(
     "fixture_name, expected_output",
     [
-        # ("fixture_postgresql_create_query", True),
-        # ("fixture_postgresql_insert_query", True),
+        ("fixture_postgresql_create_query", True),
+        ("fixture_postgresql_insert_query", True),
         ("fixture_postgresql_update_query", True),
     ],
 )
@@ -105,3 +105,33 @@ def test_execute_query_from_config(
     result = fixture_postgresql_connector.execute_query_from_config(query_config)
 
     assert bool(result) == expected_output
+
+
+@pytest.mark.parametrize(
+    "fixture_name, expected_output",
+    [
+        ("fixture_postgresql_select_query", "test_name_updated"),
+    ],
+)
+def test_execute_select_query_from_config(
+    fixture_name: str,
+    expected_output: str,
+    fixture_postgresql_connector: PostgreSQLConnector,
+    request: pytest.FixtureRequest,
+) -> bool:
+    """
+    Test the function postgresql_connector/postgresql_connector.execute_query_from_config.
+
+    Args:
+        fixture_name (str): Name of the fixture query to use.
+        expected_output (str): Expected output.
+        fixture_postgresql_connector (PostgreSQLConnector): PostgreSQL Connector.
+        request (FixtureRequest): Object to load the required fixture.
+    """
+    # Load fixture
+    query_config = request.getfixturevalue(fixture_name)
+
+    # Execute query
+    result = fixture_postgresql_connector.execute_query_from_config(query_config)
+
+    assert result.loc[0, "display_name"] == expected_output
