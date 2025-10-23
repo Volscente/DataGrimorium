@@ -1,3 +1,19 @@
+# v.0.1.2
+
+------
+
+- [x] Add Pydantic `PostgreSQLClientConfig` in `data_grimorium/postgresql_connector/postgresql_types.py`
+- [x] Add Pydantic `PostgreSQLQueryConfig` in `data_grimorium/postgresql_connector/postgresql_types.py`
+- [x] Add Function `execute_query_from_config` in `data_grimorium/postgresql_connector/postgresql_connector.PostgreSQLConnector`
+- [x] Add PyTest Fixture `fixture_postgresql_create_query` in `fixtures/postgresql_fixtures.py`
+- [x] Add PyTest Fixture `fixture_postgresql_insert_query` in `fixtures/postgresql_fixtures.py`
+- [x] Add PyTest Fixture `fixture_postgresql_update_query` in `fixtures/postgresql_fixtures.py`
+- [x] Add PyTest Fixture `fixture_postgresql_select_query` in `fixtures/postgresql_fixtures.py`
+- [x] Add PyTest `test_execute_query_from_config` in `postgresql_connector/test_postgresql_connector.py`
+- [x] Add PyTest `test_execute_select_query_from_config` in `postgresql_connector/test_postgresql_connector.py`
+- [x] Add Function `tables_exists` in `data_grimorium/postgresql_connector/postgresql_connector.PostgreSQLConnector`
+- [x] Add PyTest `test_tables_exists` in `postgresql_connector/test_postgresql_connector.py`
+
 # v.0.1.1
 
 ------
