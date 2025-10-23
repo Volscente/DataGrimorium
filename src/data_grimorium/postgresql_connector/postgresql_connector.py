@@ -119,7 +119,7 @@ class PostgreSQLConnector:
                     )
                     conn.commit()
 
-                    logging.info(f"🕵🏻 Table {table_name} exists? -> {bool(cur.rowcount)}")
+                    logging.info(f"🕵🏻 Table {table_name} exists? → {bool(cur.rowcount)}")
 
                     return bool(cur.rowcount)
 

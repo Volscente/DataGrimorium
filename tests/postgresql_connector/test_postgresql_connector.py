@@ -135,3 +135,28 @@ def test_execute_select_query_from_config(
     result = fixture_postgresql_connector.execute_query_from_config(query_config)
 
     assert result.loc[0, "display_name"] == expected_output
+
+
+@pytest.mark.parametrize(
+    "table_name, expected_output",
+    [
+        ("test_table_creation", True),
+    ],
+)
+def test_tables_exists(
+    fixture_postgresql_connector: PostgreSQLConnector,
+    table_name: str,
+    expected_output: bool,
+) -> bool:
+    """
+    Test the function postgresql_connector/postgresql_connector.tables_exists.
+
+    Args:
+        fixture_postgresql_connector (PostgreSQLConnector): PostgreSQL Connector.
+        table_name (str): Name of the table to check.
+        expected_output (bool): Expected output.
+    """
+    # Check if the table exists
+    result = fixture_postgresql_connector.tables_exists(table_name)
+
+    assert result == expected_output
