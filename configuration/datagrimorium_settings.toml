@@ -68,4 +68,9 @@ query_path = 'data/test/postgresql_connector/test_update_query.sql'
 table_name = 'test_table_creation'
 query_parameters.row_id = '1'
 query_parameters.display_name = 'test_name_updated'
+
+[pytest.postgresql.select_query_config]
+query_path = 'data/test/postgresql_connector/select_query_config.sql'
+table_name = 'test_table_creation'
+query_parameters.row_id = '1'
 # ----------------------------
