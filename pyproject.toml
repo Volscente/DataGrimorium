@@ -1,6 +1,6 @@
 [project]
 name = "data-grimorium"
-version = "0.1.1"
+version = "0.1.2"
 description = "Data Grimorium is a collection of utilities for Data Scientists and Machine Learning Engineers, designed to streamline workflows and accelerate day-to-day coding tasks."
 authors = [
   {name = "Simone Porreca", email = "porrecasimone@gmail.com"},
@@ -8,10 +8,11 @@ authors = [
 requires-python = ">=3.13"
 dependencies = [
     "db-dtypes>=1.4.3",
-    "dynaconf>=3.2.11",
+    "dynaconf>=3.2.12",
     "google-cloud-bigquery>=3.38.0",
     "pandas>=2.3.3",
-    "pydantic>=2.12.0",
+    "psycopg2>=2.9.11",
+    "pydantic>=2.12.3",
     "scikit-learn>=1.7.2",
     "sentence-transformers>=5.1.1",
 ]
@@ -37,7 +38,7 @@ dev = [
     "pre-commit>=4.3.0",
     "pytest>=8.4.2",
     "pytest-dotenv>=0.5.2",
-    "ruff>=0.13.1",
+    "ruff>=0.14.1",
 ]
 
 [tool.pytest.ini_options]
@@ -67,3 +68,6 @@ ignore = ["E501"]
 quote-style = "double"
 indent-style = "space"
 line-ending = "auto"
+
+[tool.env]
+file = ".env"

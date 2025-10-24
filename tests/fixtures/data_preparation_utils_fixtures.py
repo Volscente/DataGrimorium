@@ -129,7 +129,7 @@ def fixture_encode_text_config(
 
 
 @pytest.fixture
-def fixture_sentences(file_path: str = "data/test/sentences.txt") -> List[str]:
+def fixture_sentences(file_path: str = "data/test/data_preparation/sentences.txt") -> List[str]:
     """
     Fixture for a list of sentences to encode.
 
