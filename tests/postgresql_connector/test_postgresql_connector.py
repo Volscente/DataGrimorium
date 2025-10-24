@@ -58,21 +58,22 @@ def setup_module(module: ModuleType) -> None:
 
 
 @pytest.mark.parametrize("database_name", ["test_postgres_db"])
-def test_set_client(
+def test_get_connection(
     fixture_postgresql_connector: PostgreSQLConnector,
     database_name: str,
 ) -> bool:
     """
-    Test the function postgresql_connector/postgresql_connector._set_client
-    by checking the ``self._client`` and ``self._cursor`` attributes.
+    Test the function postgresql_connector/postgresql_connector._get_connection
+    by checking the connection attributes.
 
     Args:
         fixture_postgresql_connector (PostgreSQLConnector): PostgreSQL Connector
         database_name (String): Expected database name
     """
-    assert fixture_postgresql_connector._client is not None
-    assert fixture_postgresql_connector._client.info.dbname == database_name
-    assert fixture_postgresql_connector._cursor.connection.info.dbname == database_name
+    # Retrieve connection
+    connection = fixture_postgresql_connector._get_connection()
+
+    assert connection.info.dbname == database_name
 
 
 @pytest.mark.parametrize(
