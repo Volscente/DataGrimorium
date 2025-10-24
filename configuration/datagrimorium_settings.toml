@@ -1,7 +1,7 @@
-# ---------- Config ----------
+# ---------- PyTest Config ----------
 [pytest]
 [pytest.bigquery.read_query_config]
-query_path = 'data/test/test_read_query.sql'
+query_path = 'data/test/bigquery_connector/test_read_query.sql'
 query_parameters.id.name = 'id'
 query_parameters.id.type = 'INTEGER'
 query_parameters.id.value = 3863
@@ -10,7 +10,7 @@ query_parameters.display_name.type = 'STRING'
 query_parameters.display_name.value = 'Adam Hughes'
 
 [pytest.bigquery.create_table_query_config]
-query_path = 'data/test/test_create_table_query.sql'
+query_path = 'data/test/bigquery_connector/test_create_table_query.sql'
 query_parameters.id.name = 'id'
 query_parameters.id.type = 'INTEGER'
 query_parameters.id.value = 1
@@ -45,4 +45,32 @@ column_name = 'reputation'
 standardisation = 'min_max_scaler'
 drop_outliers.method = 'iqr'
 nan_values = 'drop_nan'
+
+[pytest.postgresql.client]
+dbname = 'test_postgres_db'
+user = 'test_postgres_user'
+password = 'postgres'
+host = 'localhost'
+port = 5432
+
+[pytest.postgresql.create_query_config]
+query_path = 'data/test/postgresql_connector/test_create_query.sql'
+table_name = 'test_table_creation'
+
+[pytest.postgresql.insert_query_config]
+query_path = 'data/test/postgresql_connector/test_insert_query.sql'
+table_name = 'test_table_creation'
+query_parameters.row_id = '1'
+query_parameters.display_name = 'test_name'
+
+[pytest.postgresql.update_query_config]
+query_path = 'data/test/postgresql_connector/test_update_query.sql'
+table_name = 'test_table_creation'
+query_parameters.row_id = '1'
+query_parameters.display_name = 'test_name_updated'
+
+[pytest.postgresql.select_query_config]
+query_path = 'data/test/postgresql_connector/test_select_query.sql'
+table_name = 'test_table_creation'
+query_parameters.row_id = '1'
 # ----------------------------

@@ -19,7 +19,7 @@ root_path = pathlib.Path(os.getenv("DATA_GRIMORIUM_ROOT_PATH"))
     "input_path, root_path_file, expected_first_line",
     [
         (
-            pathlib.Path("data/test/test_read_query.sql"),
+            pathlib.Path("data/test/bigquery_connector/test_read_query.sql"),
             root_path,
             "/*",
         )

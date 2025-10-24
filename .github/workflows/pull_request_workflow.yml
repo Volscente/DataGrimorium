@@ -1,50 +1,78 @@
 # Workflow triggered on PRs that run PyLint and PyTest
 name: Pull Request Workflow
 run-name: ${{ github.actor }} Pull Request Workflow 🚀
+
 on:
   pull_request:
     branches:
       - main
       - dev
+
 env:
   DATA_GRIMORIUM_ROOT_PATH: './'
 
-
 jobs:
-    pr_workflow:
-      name: pr_workflow
-      runs-on: ubuntu-latest
-      steps:
-        - run: echo "Running ${{ github.job }} in branch ${{ github.ref_name }}"
+  pr_workflow:
+    name: pr_workflow
+    runs-on: ubuntu-latest
 
-        # Checkout repo
-        - name: Checkout
-          uses: actions/checkout@v4
+    # Add PostgreSQL service
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: test_postgres_db
+          POSTGRES_USER: test_postgres_user
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        # Wait for Postgres to be ready
+        options: >-
+          --health-cmd="pg_isready -U test_postgres_user -d test_postgres_db"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
-        # Install uv
-        - name: Install the latest version of uv
-          uses: astral-sh/setup-uv@v6
-          with:
-            version: "latest"
+    steps:
+      - run: echo "Running ${{ github.job }} in branch ${{ github.ref_name }}"
 
-        # Install Python
-        - name: "Set up Python"
-          uses: actions/setup-python@v5
-          with:
-            python-version-file: ".python-version"
+      # Checkout repo
+      - name: Checkout
+        uses: actions/checkout@v4
 
-        # Install dependencies
-        - name: Install the project
-          run: uv sync --all-extras --dev
+      # Install uv
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "latest"
 
-        # Lint python files
-        - name: Ruff lint
-          run: uv run ruff check --fix
+      # Install Python
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
 
-        # Format files
-        - name: Ruff format
-          run: uv run ruff format
+      # Install dependencies
+      - name: Install the project
+        run: uv sync --all-extras --dev
 
-        # Unit tests
-        - name: Run Unit Tests with PyTest
-          run: uv run pytest
+      # Lint python files
+      - name: Ruff lint
+        run: uv run ruff check --fix
+
+      # Format files
+      - name: Ruff format
+        run: uv run ruff format
+
+      # Run Unit Tests
+      - name: Run Unit Tests with PyTest
+        env:
+          DB_NAME: test_postgres_db
+          DB_USER: test_postgres_user
+          DB_PASSWORD: postgres
+          DB_HOST: localhost
+          DB_PORT: 5432
+        run: |
+          echo "Waiting for PostgreSQL to start..."
+          sleep 5
+          uv run pytest -v
