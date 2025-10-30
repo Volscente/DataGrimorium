@@ -22,6 +22,7 @@ from data_grimorium.postgresql_connector.postgresql_types import (
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M",
 )
 
 
