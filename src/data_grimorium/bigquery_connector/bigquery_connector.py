@@ -61,12 +61,10 @@ class BigQueryConnector:
         """
         Set the attribute ``_client`` with an instance of the BigQuery Client.
         """
-        logging.info(
-            f"💼 Set the BigQuery client with project id {self._client_config.project_id.value}"
-        )
+        logging.info(f"💼 Set the BigQuery client with project id {self._client_config.project_id}")
 
         # Set the client
-        self._client = bigquery.Client(project=self._client_config.project_id.value)
+        self._client = bigquery.Client(project=self._client_config.project_id)
 
     @staticmethod
     def _build_query_parameters(
