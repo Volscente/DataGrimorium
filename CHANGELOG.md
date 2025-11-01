@@ -1,3 +1,9 @@
+# v.1.0.4
+
+------
+
+- [x] Hotfix Function `_set_client` in `data_grimorium/bigquery_connector/bigquery_connector.BigQueryConnector`
+
 # v.1.0.3
 
 ------
