@@ -127,3 +127,14 @@ class PostgreSQLConnector:
         except psycopg2.Error as e:
             logging.error(f"❌ Database error: {e}")
             raise
+
+    def upload_dataframe(self, data: pd.DataFrame, table_name: str, replace: bool = False) -> None:
+        """
+        Upload a DataFrame to a PostgreSQL table.
+
+        Args:
+            data (pd.DataFrame): Data to upload.
+            table_name (str): Name of the table.
+            replace (bool): If True, replace the rows if it already exists.
+        """
+        pass
