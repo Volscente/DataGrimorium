@@ -194,3 +194,17 @@ def test_upload_dataframe(
     result = fixture_postgresql_connector.upload_dataframe(input_data, input_table_name, True)
 
     assert result == expected_output
+
+
+@pytest.mark.parametrize(
+    "input_data, input_table_name, expected_exception",
+    [
+        (
+            pd.DataFrame(),
+            "test_table_creation",
+            ValueError,
+        )
+    ],
+)
+def test_upload_dataframe_exceptions() -> bool:
+    pass
