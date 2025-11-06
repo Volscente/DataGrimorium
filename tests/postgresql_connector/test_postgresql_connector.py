@@ -191,7 +191,9 @@ def test_upload_dataframe(
         expected_output (int): Expected output number of affected rows.
     """
     # Upload data
-    result = fixture_postgresql_connector.upload_dataframe(input_data, input_table_name, True)
+    result = fixture_postgresql_connector.upload_dataframe(
+        data=input_data, table_name=input_table_name, replace=True
+    )
 
     assert result == expected_output
 
@@ -206,5 +208,23 @@ def test_upload_dataframe(
         )
     ],
 )
-def test_upload_dataframe_exceptions() -> bool:
-    pass
+def test_upload_dataframe_exceptions(
+    fixture_postgresql_connector: PostgreSQLConnector,
+    input_data: pd.DataFrame,
+    input_table_name: str,
+    expected_exception: Exception,
+) -> bool:
+    """
+    Test exceptions for the function postgresql_connector/postgresql_connector.upload_dataframe
+    by passing faulty parameters.
+
+    Args:
+        fixture_postgresql_connector (PostgreSQLConnector): PostgreSQL Connector.
+        input_data (pd.DataFrame): Data to upload.
+        input_table_name (str): Name of the table.
+        expected_exception (Exception): Expected exception.
+    """
+    with pytest.raises(expected_exception):
+        fixture_postgresql_connector.upload_dataframe(
+            data=input_data, table_name=input_table_name, replace=True
+        )

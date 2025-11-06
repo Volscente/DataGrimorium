@@ -151,7 +151,9 @@ class PostgreSQLConnector:
         engine = create_engine(self._client_config.as_sqlalchemy_engine_url())
         mode = "replace" if replace else "append"
 
-        logging.info(f"Upload {len(data)} into the table {self._client_config.dbname}.{table_name}")
+        logging.info(
+            f"🪁 Upload {len(data)} into the table {self._client_config.dbname}.{table_name}"
+        )
 
         # Load the DataFrame to PostgreSQL
         rows = data.to_sql(name=table_name, con=engine, if_exists=mode, index=False)
