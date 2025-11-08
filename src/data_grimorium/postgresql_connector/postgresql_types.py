@@ -77,6 +77,9 @@ class PostgreSQLClientConfig(BaseModel):
         """
         return pd.DataFrame([self.as_dict()])
 
+    def as_sqlalchemy_engine_url(self):
+        return f"postgresql+psycopg2://{self.user}:{self.password}@{self.host}:{self.port}/{self.dbname}"
+
 
 class PostgreSQLQueryConfig(BaseModel):
     """

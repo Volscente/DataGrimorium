@@ -9,6 +9,7 @@ import psycopg2
 import pandas as pd
 from pathlib import Path
 from typing import Union
+from sqlalchemy import create_engine
 
 
 # Import Package Modules
@@ -127,3 +128,40 @@ class PostgreSQLConnector:
         except psycopg2.Error as e:
             logging.error(f"❌ Database error: {e}")
             raise
+
+    def upload_dataframe(
+        self, data: pd.DataFrame, table_name: str, replace: bool = False
+    ) -> Union[int, None]:
+        """
+        Upload a DataFrame to a PostgreSQL table.
+
+        Args:
+            data (pd.DataFrame): Data to upload.
+            table_name (str): Name of the table.
+            replace (bool): If True, replace the rows if it already exists.
+
+        Returns:
+            (Union[int, None]): Number of affected rows or None if an error occurred
+        """
+        # Check if the DataFrame is empty
+        if data.empty:
+            raise ValueError("🚨 The provided DataFrame is empty and cannot be uploaded.")
+
+        # Setup SQLAlchemy engine
+        engine = create_engine(self._client_config.as_sqlalchemy_engine_url())
+        mode = "replace" if replace else "append"
+
+        logging.info(
+            f"🪁 Upload {len(data)} into the table {self._client_config.dbname}.{table_name}"
+        )
+
+        # Load the DataFrame to PostgreSQL
+        rows = data.to_sql(name=table_name, con=engine, if_exists=mode, index=False)
+
+        # Check the result
+        if rows is None:
+            raise RuntimeError(f"❌ Upload failed: Pandas returned None for {table_name}")
+        else:
+            logging.info(f"✅ Data uploaded to {self._client_config.dbname}.{table_name}")
+
+        return rows

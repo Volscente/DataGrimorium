@@ -9,6 +9,7 @@ import pathlib
 import pytest
 import psycopg2
 import time
+import pandas as pd
 from dynaconf import Dynaconf
 from types import ModuleType
 
@@ -161,3 +162,69 @@ def test_tables_exists(
     result = fixture_postgresql_connector.tables_exists(table_name)
 
     assert result == expected_output
+
+
+@pytest.mark.parametrize(
+    "input_data, input_table_name, expected_output",
+    [
+        (
+            pd.DataFrame({"row_id": [1, 2, 3], "display_name": ["A", "B", "C"]}),
+            "test_table_creation",
+            3,
+        )
+    ],
+)
+def test_upload_dataframe(
+    fixture_postgresql_connector: PostgreSQLConnector,
+    input_data: pd.DataFrame,
+    input_table_name: str,
+    expected_output: int,
+) -> bool:
+    """
+    Test the function postgresql_connector/postgresql_connector.upload_dataframe
+    by checking the number of uploaded rows.
+
+    Args:
+        fixture_postgresql_connector (PostgreSQLConnector): PostgreSQL Connector.
+        input_data (pd.DataFrame): Data to upload.
+        input_table_name (str): Name of the table.
+        expected_output (int): Expected output number of affected rows.
+    """
+    # Upload data
+    result = fixture_postgresql_connector.upload_dataframe(
+        data=input_data, table_name=input_table_name, replace=True
+    )
+
+    assert result == expected_output
+
+
+@pytest.mark.parametrize(
+    "input_data, input_table_name, expected_exception",
+    [
+        (
+            pd.DataFrame(),
+            "test_table_creation",
+            ValueError,
+        )
+    ],
+)
+def test_upload_dataframe_exceptions(
+    fixture_postgresql_connector: PostgreSQLConnector,
+    input_data: pd.DataFrame,
+    input_table_name: str,
+    expected_exception: Exception,
+) -> bool:
+    """
+    Test exceptions for the function postgresql_connector/postgresql_connector.upload_dataframe
+    by passing faulty parameters.
+
+    Args:
+        fixture_postgresql_connector (PostgreSQLConnector): PostgreSQL Connector.
+        input_data (pd.DataFrame): Data to upload.
+        input_table_name (str): Name of the table.
+        expected_exception (Exception): Expected exception.
+    """
+    with pytest.raises(expected_exception):
+        fixture_postgresql_connector.upload_dataframe(
+            data=input_data, table_name=input_table_name, replace=True
+        )

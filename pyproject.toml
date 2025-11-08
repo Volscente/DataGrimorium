@@ -1,6 +1,6 @@
 [project]
 name = "data-grimorium"
-version = "1.0.4"
+version = "1.0.5"
 description = "Data Grimorium is a collection of utilities for Data Scientists and Machine Learning Engineers, designed to streamline workflows and accelerate day-to-day coding tasks."
 authors = [
   {name = "Simone Porreca", email = "porrecasimone@gmail.com"},
@@ -14,7 +14,8 @@ dependencies = [
     "psycopg2>=2.9.11",
     "pydantic>=2.12.3",
     "scikit-learn>=1.7.2",
-    "sentence-transformers>=5.1.1",
+    "sentence-transformers>=5.1.2",
+    "sqlalchemy>=2.0.44",
 ]
 readme = "README.md"
 license = "GPL-3.0"

@@ -1,3 +1,11 @@
+# v.1.0.5
+
+-----
+
+- [x] Add Function `upload_dataframe` in `data_grimorium/postgresql_connector/postgresql_connector.PostgreSQLConnector`
+- [x] Add PyTest `test_upload_dataframe` in `postgresql_connector/test_postgresql_connector.py`
+- [x] Add PyTest `test_upload_dataframe_exceptions` in `postgresql_connector/test_postgresql_connector.py`
+
 # v.1.0.4
 
 ------
