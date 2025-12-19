@@ -48,25 +48,35 @@ class PostgreSQLConnector:
         self._client_config = client_config
         self._root_path = root_path
 
-    def _get_connection(self):
+    def _get_connection(self, schema: str | None = None):
         """
         Creates and returns a new PostgreSQL connection.
         """
         # Open connection
         connection = psycopg2.connect(**self._client_config.model_dump())
 
-        logging.info(f"🛢 Connected to database {connection.info.dbname}")
+        # Use schema when present
+        if schema:
+            with connection.cursor() as cur:
+                cur.execute("SET search_path TO %s", (schema,))
+                connection.commit()
+
+        logging.info(
+            f"🛢 Connected to database {connection.info.dbname}"
+            + (f" | schema={schema}" if schema else "")
+        )
 
         return connection
 
     def execute_query_from_config(
-        self, query_config: PostgreSQLQueryConfig
+        self, query_config: PostgreSQLQueryConfig, schema: str | None = None
     ) -> Union[pd.DataFrame, bool]:
         """
         Execute a query from local path and with a certain set of parameter configurations.
 
         Args:
             query_config (PostgreSQLQueryConfig): Query configuration
+            schema (str): Name of the schema to use
 
         Returns:
             (Union[pd.DataFrame, bool]): The result of the query execution.
@@ -80,7 +90,7 @@ class PostgreSQLConnector:
 
         # Execute within a context manager to auto-close connection
         try:
-            with self._get_connection() as conn:
+            with self._get_connection(schema=schema) as conn:
                 with conn.cursor() as cur:
                     # Execute the query with the parameters (if present)
                     cur.execute(query, query_config.query_parameters or None)
@@ -101,19 +111,20 @@ class PostgreSQLConnector:
             logging.error(f"❌ Database error: {e}")
             raise
 
-    def tables_exists(self, table_name: str) -> bool:
+    def tables_exists(self, table_name: str, schema: str | None = None) -> bool:
         """
         Check if a table exists in the database.
 
         Args:
             table_name (str): Name of the table to check.
+            schema (str): Name of the schema to use
 
         Returns:
             (bool): True if the table exists, False otherwise.
         """
         # Execute within a context manager to auto-close connection
         try:
-            with self._get_connection() as conn:
+            with self._get_connection(schema=schema) as conn:
                 with conn.cursor() as cur:
                     # Execute the query with the parameters (if present)
                     cur.execute(
@@ -130,7 +141,7 @@ class PostgreSQLConnector:
             raise
 
     def upload_dataframe(
-        self, data: pd.DataFrame, table_name: str, replace: bool = False
+        self, data: pd.DataFrame, table_name: str, schema: str = "public", replace: bool = False
     ) -> Union[int, None]:
         """
         Upload a DataFrame to a PostgreSQL table.
@@ -138,6 +149,7 @@ class PostgreSQLConnector:
         Args:
             data (pd.DataFrame): Data to upload.
             table_name (str): Name of the table.
+            schema (str): Name of the schema to use
             replace (bool): If True, replace the rows if it already exists.
 
         Returns:
@@ -156,7 +168,7 @@ class PostgreSQLConnector:
         )
 
         # Load the DataFrame to PostgreSQL
-        rows = data.to_sql(name=table_name, con=engine, if_exists=mode, index=False)
+        rows = data.to_sql(name=table_name, con=engine, if_exists=mode, schema=schema, index=False)
 
         # Check the result
         if rows is None:
