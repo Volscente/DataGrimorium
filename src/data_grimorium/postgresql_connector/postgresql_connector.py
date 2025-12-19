@@ -69,19 +69,30 @@ class PostgreSQLConnector:
         return connection
 
     def execute_query_from_config(
-        self, query_config: PostgreSQLQueryConfig, schema: str | None = None
+        self, query_config: PostgreSQLQueryConfig
     ) -> Union[pd.DataFrame, bool]:
         """
         Execute a query from local path and with a certain set of parameter configurations.
 
         Args:
             query_config (PostgreSQLQueryConfig): Query configuration
-            schema (str): Name of the schema to use
 
         Returns:
             (Union[pd.DataFrame, bool]): The result of the query execution.
             Either the data or a bool in case of table creation.
         """
+        # Check if the schema already exists, otherwise create it
+        if not self.schema_exists(query_config.schema):
+            logging.info(f"📝 Creating schema {query_config.schema}")
+            try:
+                with self._get_connection() as conn:
+                    with conn.cursor() as cur:
+                        cur.execute(f"CREATE SCHEMA {query_config.schema}")
+                        conn.commit()
+            except psycopg2.Error as e:
+                logging.error(f"❌ Database error: {e}")
+                raise
+
         # Retrieve query path
         query_path = Path(query_config.query_path)
 
@@ -90,7 +101,7 @@ class PostgreSQLConnector:
 
         # Execute within a context manager to auto-close connection
         try:
-            with self._get_connection(schema=schema) as conn:
+            with self._get_connection(schema=query_config.schema) as conn:
                 with conn.cursor() as cur:
                     # Execute the query with the parameters (if present)
                     cur.execute(query, query_config.query_parameters or None)
@@ -111,7 +122,35 @@ class PostgreSQLConnector:
             logging.error(f"❌ Database error: {e}")
             raise
 
-    def tables_exists(self, table_name: str, schema: str | None = None) -> bool:
+    def schema_exists(self, schema: str) -> bool:
+        """
+        Check if a schema exists in the database.
+
+        Args:
+            schema (str): Name of the schema to check.
+
+        Returns:
+            (bool): True if the schema exists, False otherwise.
+        """
+        # Execute within a context manager to auto-close connection
+        try:
+            with self._get_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        "SELECT schema_name FROM information_schema.schemata WHERE schema_name=%s",
+                        (schema,),
+                    )
+                    conn.commit()
+
+                    logging.info(f"🕵🏻 Schema {schema} exists? → {bool(cur.rowcount)}")
+
+                    return bool(cur.rowcount)
+
+        except psycopg2.Error as e:
+            logging.error(f"❌ Database error: {e}")
+            raise
+
+    def table_exists(self, table_name: str, schema: str | None = None) -> bool:
         """
         Check if a table exists in the database.
 
@@ -126,7 +165,6 @@ class PostgreSQLConnector:
         try:
             with self._get_connection(schema=schema) as conn:
                 with conn.cursor() as cur:
-                    # Execute the query with the parameters (if present)
                     cur.execute(
                         "select * from information_schema.tables where table_name=%s", (table_name,)
                     )
@@ -158,6 +196,18 @@ class PostgreSQLConnector:
         # Check if the DataFrame is empty
         if data.empty:
             raise ValueError("🚨 The provided DataFrame is empty and cannot be uploaded.")
+
+        # Check if the schema already exists, otherwise create it
+        if not self.schema_exists(schema):
+            logging.info(f"📝 Creating schema {schema}")
+            try:
+                with self._get_connection() as conn:
+                    with conn.cursor() as cur:
+                        cur.execute(f"CREATE SCHEMA {schema}")
+                        conn.commit()
+            except psycopg2.Error as e:
+                logging.error(f"❌ Database error: {e}")
+                raise
 
         # Setup SQLAlchemy engine
         engine = create_engine(self._client_config.as_sqlalchemy_engine_url())
