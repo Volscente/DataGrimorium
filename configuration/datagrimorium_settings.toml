@@ -55,22 +55,26 @@ port = 5432
 
 [pytest.postgresql.create_query_config]
 query_path = 'data/test/postgresql_connector/test_create_query.sql'
+schema = 'test_data_layer'
 table_name = 'test_table_creation'
 
 [pytest.postgresql.insert_query_config]
 query_path = 'data/test/postgresql_connector/test_insert_query.sql'
+schema = 'test_data_layer'
 table_name = 'test_table_creation'
 query_parameters.row_id = '1'
 query_parameters.display_name = 'test_name'
 
 [pytest.postgresql.update_query_config]
 query_path = 'data/test/postgresql_connector/test_update_query.sql'
+schema = 'test_data_layer'
 table_name = 'test_table_creation'
 query_parameters.row_id = '1'
 query_parameters.display_name = 'test_name_updated'
 
 [pytest.postgresql.select_query_config]
 query_path = 'data/test/postgresql_connector/test_select_query.sql'
+schema = 'test_data_layer'
 table_name = 'test_table_creation'
 query_parameters.row_id = '1'
 # ----------------------------

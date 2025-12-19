@@ -78,6 +78,27 @@ def test_get_connection(
 
 
 @pytest.mark.parametrize(
+    "schema_name, expected_output", [("test_data_layer", True), ("non_existent_data_layer", False)]
+)
+def test_schema_exists(
+    fixture_postgresql_connector: PostgreSQLConnector, schema_name: str, expected_output: bool
+) -> bool:
+    """
+    Test the function postgresql_connector/postgresql_connector.schema_exists
+    by checking different schema names within the database.
+
+    Args:
+        fixture_postgresql_connector (PostgreSQLConnector): PostgreSQL Connector.
+        schema_name (str): Name of the schema to check.
+        expected_output (bool): Expected output.
+    """
+    # Check if the schema exists
+    result = fixture_postgresql_connector.schema_exists(schema_name)
+
+    assert result == expected_output
+
+
+@pytest.mark.parametrize(
     "fixture_name, expected_output",
     [
         ("fixture_postgresql_create_query", True),
@@ -145,13 +166,13 @@ def test_execute_select_query_from_config(
         ("test_table_creation", True),
     ],
 )
-def test_tables_exists(
+def test_table_exists(
     fixture_postgresql_connector: PostgreSQLConnector,
     table_name: str,
     expected_output: bool,
 ) -> bool:
     """
-    Test the function postgresql_connector/postgresql_connector.tables_exists.
+    Test the function postgresql_connector/postgresql_connector.table_exists.
 
     Args:
         fixture_postgresql_connector (PostgreSQLConnector): PostgreSQL Connector.
@@ -159,7 +180,7 @@ def test_tables_exists(
         expected_output (bool): Expected output.
     """
     # Check if the table exists
-    result = fixture_postgresql_connector.tables_exists(table_name)
+    result = fixture_postgresql_connector.table_exists(table_name)
 
     assert result == expected_output
 
@@ -192,7 +213,7 @@ def test_upload_dataframe(
     """
     # Upload data
     result = fixture_postgresql_connector.upload_dataframe(
-        data=input_data, table_name=input_table_name, replace=True
+        data=input_data, table_name=input_table_name, schema="test_data_layer", replace=True
     )
 
     assert result == expected_output
