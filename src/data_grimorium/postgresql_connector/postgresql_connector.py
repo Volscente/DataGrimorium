@@ -48,14 +48,23 @@ class PostgreSQLConnector:
         self._client_config = client_config
         self._root_path = root_path
 
-    def _get_connection(self):
+    def _get_connection(self, schema: str | None = None):
         """
         Creates and returns a new PostgreSQL connection.
         """
         # Open connection
         connection = psycopg2.connect(**self._client_config.model_dump())
 
-        logging.info(f"🛢 Connected to database {connection.info.dbname}")
+        # Use schema when present
+        if schema:
+            with connection.cursor() as cur:
+                cur.execute("SET search_path TO %s", (schema,))
+                connection.commit()
+
+        logging.info(
+            f"🛢 Connected to database {connection.info.dbname}"
+            + (f" | schema={schema}" if schema else "")
+        )
 
         return connection
 
@@ -72,6 +81,18 @@ class PostgreSQLConnector:
             (Union[pd.DataFrame, bool]): The result of the query execution.
             Either the data or a bool in case of table creation.
         """
+        # Check if the schema already exists, otherwise create it
+        if not self.schema_exists(query_config.schema):
+            logging.info(f"📝 Creating schema {query_config.schema}")
+            try:
+                with self._get_connection() as conn:
+                    with conn.cursor() as cur:
+                        cur.execute(f"CREATE SCHEMA {query_config.schema}")
+                        conn.commit()
+            except psycopg2.Error as e:
+                logging.error(f"❌ Database error: {e}")
+                raise
+
         # Retrieve query path
         query_path = Path(query_config.query_path)
 
@@ -80,7 +101,7 @@ class PostgreSQLConnector:
 
         # Execute within a context manager to auto-close connection
         try:
-            with self._get_connection() as conn:
+            with self._get_connection(schema=query_config.schema) as conn:
                 with conn.cursor() as cur:
                     # Execute the query with the parameters (if present)
                     cur.execute(query, query_config.query_parameters or None)
@@ -101,21 +122,49 @@ class PostgreSQLConnector:
             logging.error(f"❌ Database error: {e}")
             raise
 
-    def tables_exists(self, table_name: str) -> bool:
+    def schema_exists(self, schema: str) -> bool:
+        """
+        Check if a schema exists in the database.
+
+        Args:
+            schema (str): Name of the schema to check.
+
+        Returns:
+            (bool): True if the schema exists, False otherwise.
+        """
+        # Execute within a context manager to auto-close connection
+        try:
+            with self._get_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        "SELECT schema_name FROM information_schema.schemata WHERE schema_name=%s",
+                        (schema,),
+                    )
+                    conn.commit()
+
+                    logging.info(f"🕵🏻 Schema {schema} exists? → {bool(cur.rowcount)}")
+
+                    return bool(cur.rowcount)
+
+        except psycopg2.Error as e:
+            logging.error(f"❌ Database error: {e}")
+            raise
+
+    def table_exists(self, table_name: str, schema: str | None = None) -> bool:
         """
         Check if a table exists in the database.
 
         Args:
             table_name (str): Name of the table to check.
+            schema (str): Name of the schema to use
 
         Returns:
             (bool): True if the table exists, False otherwise.
         """
         # Execute within a context manager to auto-close connection
         try:
-            with self._get_connection() as conn:
+            with self._get_connection(schema=schema) as conn:
                 with conn.cursor() as cur:
-                    # Execute the query with the parameters (if present)
                     cur.execute(
                         "select * from information_schema.tables where table_name=%s", (table_name,)
                     )
@@ -130,7 +179,7 @@ class PostgreSQLConnector:
             raise
 
     def upload_dataframe(
-        self, data: pd.DataFrame, table_name: str, replace: bool = False
+        self, data: pd.DataFrame, table_name: str, schema: str = "public", replace: bool = False
     ) -> Union[int, None]:
         """
         Upload a DataFrame to a PostgreSQL table.
@@ -138,6 +187,7 @@ class PostgreSQLConnector:
         Args:
             data (pd.DataFrame): Data to upload.
             table_name (str): Name of the table.
+            schema (str): Name of the schema to use
             replace (bool): If True, replace the rows if it already exists.
 
         Returns:
@@ -146,6 +196,18 @@ class PostgreSQLConnector:
         # Check if the DataFrame is empty
         if data.empty:
             raise ValueError("🚨 The provided DataFrame is empty and cannot be uploaded.")
+
+        # Check if the schema already exists, otherwise create it
+        if not self.schema_exists(schema):
+            logging.info(f"📝 Creating schema {schema}")
+            try:
+                with self._get_connection() as conn:
+                    with conn.cursor() as cur:
+                        cur.execute(f"CREATE SCHEMA {schema}")
+                        conn.commit()
+            except psycopg2.Error as e:
+                logging.error(f"❌ Database error: {e}")
+                raise
 
         # Setup SQLAlchemy engine
         engine = create_engine(self._client_config.as_sqlalchemy_engine_url())
@@ -156,7 +218,7 @@ class PostgreSQLConnector:
         )
 
         # Load the DataFrame to PostgreSQL
-        rows = data.to_sql(name=table_name, con=engine, if_exists=mode, index=False)
+        rows = data.to_sql(name=table_name, con=engine, if_exists=mode, schema=schema, index=False)
 
         # Check the result
         if rows is None:
