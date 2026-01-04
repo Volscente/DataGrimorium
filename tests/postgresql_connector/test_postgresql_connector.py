@@ -30,7 +30,7 @@ config = Dynaconf(
 def setup_module(module: ModuleType) -> None:
     """
     Setup run once before any tests in this module to check if PostgreSQL database
-    is running.
+    is running and create required resources.
 
     Args:
         module (ModuleType): Current Python module
@@ -48,8 +48,14 @@ def setup_module(module: ModuleType) -> None:
                 dbname=config["postgresql"]["client"]["dbname"],
                 connect_timeout=3,
             )
-            conn.close()
             print(f"✅ PostgreSQL is up (checked on attempt {attempt + 1})")
+
+            # Create required test schema
+            with conn.cursor() as cur:
+                cur.execute("CREATE SCHEMA IF NOT EXISTS test_data_layer")
+                conn.commit()
+
+            conn.close()
             return
         except psycopg2.OperationalError:
             print(f"⏳ PostgreSQL not ready, retrying ({attempt + 1}/{max_retries})...")
@@ -75,6 +81,27 @@ def test_get_connection(
     connection = fixture_postgresql_connector._get_connection()
 
     assert connection.info.dbname == database_name
+
+
+@pytest.mark.parametrize(
+    "schema_name, expected_output", [("test_data_layer", True), ("non_existent_data_layer", False)]
+)
+def test_schema_exists(
+    fixture_postgresql_connector: PostgreSQLConnector, schema_name: str, expected_output: bool
+) -> bool:
+    """
+    Test the function postgresql_connector/postgresql_connector.schema_exists
+    by checking different schema names within the database.
+
+    Args:
+        fixture_postgresql_connector (PostgreSQLConnector): PostgreSQL Connector.
+        schema_name (str): Name of the schema to check.
+        expected_output (bool): Expected output.
+    """
+    # Check if the schema exists
+    result = fixture_postgresql_connector.schema_exists(schema_name)
+
+    assert result == expected_output
 
 
 @pytest.mark.parametrize(
@@ -145,13 +172,13 @@ def test_execute_select_query_from_config(
         ("test_table_creation", True),
     ],
 )
-def test_tables_exists(
+def test_table_exists(
     fixture_postgresql_connector: PostgreSQLConnector,
     table_name: str,
     expected_output: bool,
 ) -> bool:
     """
-    Test the function postgresql_connector/postgresql_connector.tables_exists.
+    Test the function postgresql_connector/postgresql_connector.table_exists.
 
     Args:
         fixture_postgresql_connector (PostgreSQLConnector): PostgreSQL Connector.
@@ -159,7 +186,7 @@ def test_tables_exists(
         expected_output (bool): Expected output.
     """
     # Check if the table exists
-    result = fixture_postgresql_connector.tables_exists(table_name)
+    result = fixture_postgresql_connector.table_exists(table_name)
 
     assert result == expected_output
 
@@ -192,7 +219,7 @@ def test_upload_dataframe(
     """
     # Upload data
     result = fixture_postgresql_connector.upload_dataframe(
-        data=input_data, table_name=input_table_name, replace=True
+        data=input_data, table_name=input_table_name, schema="test_data_layer", replace=True
     )
 
     assert result == expected_output

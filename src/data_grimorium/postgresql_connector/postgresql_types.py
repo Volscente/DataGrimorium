@@ -87,12 +87,14 @@ class PostgreSQLQueryConfig(BaseModel):
 
     Attributes:
         query_path (str): Path to the query file.
+        schema (str): Schema name (``public`` default)
         local_path (str): [Optional] Local path where to save the data
         table_name (str): [Optional] Table name
         query_parameters (dict): [Optional] Query parameters
     """
 
     query_path: str = Field(..., description="Path to the query file", alias="query_path")
+    schema: str = Field("public", description="Schema name", alias="schema")
     local_path: str = Field(
         None, description="Local path where to save the data", alias="local_path"
     )
@@ -113,6 +115,11 @@ class PostgreSQLQueryConfig(BaseModel):
                 "query_path": {
                     "type": "string",
                     "description": "Path to the query file.",
+                },
+                "schema": {
+                    "type": "string",
+                    "default": "public",
+                    "description": "Schema name.",
                 },
                 "local_path": {
                     "type": ["string", "null"],

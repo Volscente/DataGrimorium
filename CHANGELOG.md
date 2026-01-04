@@ -1,3 +1,14 @@
+# v.1.0.6
+
+-----
+
+- [x] Refactor Class `PostgreSQLConnector` in `data_grimorium/postgresql_connector/postgresql_connector.py` by adding the `schema` parameter
+- [x] Refactor Pydantic `PostgreSQLQueryConfig` in `data_grimorium/postgresql_connector/postgresql_types.py` by adding the `schema`
+- [x] Add Function `schema_exists` in `data_grimorium/postgresql_connector/postgresql_connector.py`
+- [x] Add PyTest `test_schema_exists` in `tests/postgresql_connector/test_postgresql_connector.py`
+- [x] Refactor PyTests in `tests/postgresql_connector/test_postgresql_connector.py`
+- [x] Refactor Function Name `tables_exists` in `table_exists` in `data_grimorium/postgresql_connector/postgresql_connector.PostgreSQLConnector`
+
 # v.1.0.5
 
 -----
@@ -25,8 +36,8 @@
 - [x] Add PyTest Fixture `fixture_postgresql_select_query` in `fixtures/postgresql_fixtures.py`
 - [x] Add PyTest `test_execute_query_from_config` in `postgresql_connector/test_postgresql_connector.py`
 - [x] Add PyTest `test_execute_select_query_from_config` in `postgresql_connector/test_postgresql_connector.py`
-- [x] Add Function `tables_exists` in `data_grimorium/postgresql_connector/postgresql_connector.PostgreSQLConnector`
-- [x] Add PyTest `test_tables_exists` in `postgresql_connector/test_postgresql_connector.py`
+- [x] Add Function `table_exists` in `data_grimorium/postgresql_connector/postgresql_connector.PostgreSQLConnector`
+- [x] Add PyTest `test_table_exists` in `postgresql_connector/test_postgresql_connector.py`
 
 # v.0.1.1
 
