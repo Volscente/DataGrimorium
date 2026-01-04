@@ -30,7 +30,7 @@ config = Dynaconf(
 def setup_module(module: ModuleType) -> None:
     """
     Setup run once before any tests in this module to check if PostgreSQL database
-    is running.
+    is running and create required resources.
 
     Args:
         module (ModuleType): Current Python module
@@ -48,8 +48,14 @@ def setup_module(module: ModuleType) -> None:
                 dbname=config["postgresql"]["client"]["dbname"],
                 connect_timeout=3,
             )
-            conn.close()
             print(f"✅ PostgreSQL is up (checked on attempt {attempt + 1})")
+
+            # Create required test schema
+            with conn.cursor() as cur:
+                cur.execute("CREATE SCHEMA IF NOT EXISTS test_data_layer")
+                conn.commit()
+
+            conn.close()
             return
         except psycopg2.OperationalError:
             print(f"⏳ PostgreSQL not ready, retrying ({attempt + 1}/{max_retries})...")
